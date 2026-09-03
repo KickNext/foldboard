@@ -1,0 +1,877 @@
+{
+  "undo": "Undo",
+  "redo": "Redo",
+  "history": "History",
+  "storageConflict": "Another tab owns editing access, or saved data has changed. Export any unsaved work, close the other Foldboard tabs, then reload this tab. Nothing was overwritten.",
+  "importJson": "Import JSON",
+  "importTitle": "Replace this board?",
+  "importHint": "The selected file replaces this board. Other projects are unchanged. You can undo the import.",
+  "importInvalid": "Could not import this file. Choose a valid Foldboard JSON file up to 10 MB. Your board is unchanged.",
+  "disconnect": "Disconnect",
+  "disconnectHint": "Remove connections between this external card and this level. The original card and connections in other levels will remain.",
+  "openOriginal": "Go to original",
+  "referenceHint": "External card. Its name and description belong to the original. Double-click to go there.",
+  "connectionExists": "This arrow already exists. Select another target or cancel.",
+  "agentReadOnly": "Agent access",
+  "agentViewOnly": "View only",
+  "agentViewAndEdit": "View and edit",
+  "askAgent": "Ask agent",
+  "boardTools": "Board tools",
+  "zoomControls": "Zoom controls",
+  "canvasControls": "Canvas controls",
+  "agentRequests": "Agent requests",
+  "agentRequestsHint": "Saved with board context. An agent must read these requests via WebMCP; saving does not start an agent.",
+  "requestAbout": "About: {title}",
+  "@requestAbout": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "requestQuestion": "Question or task",
+  "requestQuestionHint": "What should the agent look at or change?",
+  "saveRequest": "Save request",
+  "requestSaveFailed": "Could not save the request. Your draft is still here. Check storage access and try again.",
+  "requestLoadFailed": "Saved requests could not be loaded. They have not been overwritten.",
+  "pendingRequests": "Pending ({count})",
+  "@pendingRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "handledRequests": "Handled",
+  "noRequests": "No requests here yet.",
+  "agentResponse": "Agent response",
+  "requestTargetRemoved": "{title} · removed",
+  "@requestTargetRemoved": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "removeRequest": "Remove request",
+  "removeRequestHint": "The request and its response will be removed. Board cards will not change.",
+  "reopenRequest": "Reopen request",
+  "discardRequest": "Discard this draft?",
+  "discard": "Discard",
+  "agentReadOnlyHint": "Agents can view, search and export. They cannot change projects or cards.",
+  "agentCanEditHint": "Agents can change projects and cards saved in this browser.",
+  "agentChanged": "{count, plural, one{Agent changed 1 item} other{Agent changed {count} items}}",
+  "@agentChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addBlock": "Add block",
+  "addFold": "Add fold",
+  "agentAnswered": "Agent answered a request",
+  "viewRequests": "View",
+  "pendingCommentMarker": "Pending agent request",
+  "ancestorConnection": "A card cannot connect to the fold that contains it, or any fold above that. Choose a different connection.",
+  "removeProject": "Remove project",
+  "removeProjectHint": "Remove this project from the list? Its saved board is kept for recovery. You can restore it immediately.",
+  "projectRemoved": "Project removed",
+  "restoreProject": "Restore",
+  "moreActions": "More actions",
+  "keyboardHint": "Tab to focus cards. Enter opens details or follows a fold. Arrow keys move cards; Shift moves faster.",
+  "@@locale": "en",
+  "backToProjects": "Back to projects",
+  "@backToProjects": {
+    "description": "Go back from the root board to the top-level project list."
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Compact header action opening search in the current project."
+  },
+  "searchBoardHint": "Search this project",
+  "@searchBoardHint": {
+    "description": "Search all levels of the currently open project."
+  },
+  "clearSearch": "Clear search",
+  "@clearSearch": {
+    "description": "Clear query without closing the search dialog."
+  },
+  "noSearchResults": "No matches. Try another name or description.",
+  "@noSearchResults": {
+    "description": "The board search found no matching objects."
+  },
+  "emptySearchBoard": "Nothing to find yet. Add a block or fold to this project.",
+  "@emptySearchBoard": {
+    "description": "Search in an empty board."
+  },
+  "searchStartHint": "Type a name or description to search every level.",
+  "@searchStartHint": {
+    "description": "Prompt shown before the person types a board search query."
+  },
+  "searchAllLevels": "Searches all levels",
+  "@searchAllLevels": {
+    "description": "Scope hint shown before the person types a board search query."
+  },
+  "searchResultCount": "{count, plural, =0{No results} =1{1 result} other{{count} results}} · All levels",
+  "@searchResultCount": {
+    "description": "Count and scope of search results.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "projects": "Projects",
+  "@projects": {
+    "description": "Top-level independent project boards."
+  },
+  "newProject": "New project",
+  "@newProject": {
+    "description": "Create project action and dialog title."
+  },
+  "myProject": "My project",
+  "@myProject": {
+    "description": "Name assigned to the existing board when introducing projects."
+  },
+  "openProject": "Open project",
+  "@openProject": {
+    "description": "Open this project's independent board."
+  },
+  "renameProject": "Rename project",
+  "@renameProject": {
+    "description": "Edit a project name without changing its board."
+  },
+  "createProject": "Create project",
+  "@createProject": {
+    "description": "Confirm creation of a named empty project."
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Confirm a name change."
+  },
+  "projectsLocalHint": "Boards save in this browser. Export JSON for backup; clearing site data deletes them.",
+  "@projectsLocalHint": {
+    "description": "Explain local project persistence and its limits."
+  },
+  "gettingStarted": "Start with one flow",
+  "@gettingStarted": {
+    "description": "Heading for the first-project guide."
+  },
+  "gettingStartedHint": "Blocks are steps. Folds contain levels. Arrows connect the flow.",
+  "@gettingStartedHint": {
+    "description": "Short explanation of the core board concepts for a new user."
+  },
+  "openYourBoard": "Open your board",
+  "exploreExample": "Explore example",
+  "@exploreExample": {
+    "description": "Open the editable example project saved in this browser."
+  },
+  "exampleProjectHint": "See a person and agent work across bounded levels.",
+  "@exampleProjectHint": {
+    "description": "Short explanation beside the example project entry point."
+  },
+  "@openYourBoard": {
+    "description": "Open the empty starter project from the first-project guide."
+  },
+  "projectsReadFailed": "Could not read saved projects. Original data has not been overwritten. Reload to try again.",
+  "@projectsReadFailed": {
+    "description": "Projects catalog or board could not be read."
+  },
+  "projectsWriteFailed": "Could not save in this browser. If a board is open, export JSON before leaving. Then try again.",
+  "@projectsWriteFailed": {
+    "description": "Failed catalog or board save; navigation does not discard unsaved edits."
+  },
+  "block": "Block",
+  "@block": {
+    "description": "Foldboard UI: block."
+  },
+  "fold": "Fold",
+  "@fold": {
+    "description": "Foldboard UI: folds."
+  },
+  "arrow": "Arrow",
+  "@arrow": {
+    "description": "Foldboard UI: arrow."
+  },
+  "newBlock": "New block",
+  "@newBlock": {
+    "description": "Foldboard UI: new block."
+  },
+  "newFold": "New fold",
+  "@newFold": {
+    "description": "Foldboard UI: new folds."
+  },
+  "findOnBoard": "Find on board",
+  "@findOnBoard": {
+    "description": "Foldboard UI: find on board."
+  },
+  "saving": "Saving…",
+  "@saving": {
+    "description": "Foldboard UI: saving."
+  },
+  "savedInBrowser": "Saved in this browser",
+  "@savedInBrowser": {
+    "description": "Foldboard UI: saved in browser."
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Foldboard UI: add."
+  },
+  "exportProject": "Export project",
+  "exportMarkdown": "Markdown",
+  "exportJsonFormat": "JSON",
+  "exportDiagramHint": "JSON is the backup. Markdown and Mermaid describe the plan. PNG captures this level.",
+  "exportJsonHint": "The exact board, for import and backup.",
+  "exportMarkdownHint": "The plan as a document, for people and AI agents.",
+  "exportMermaidHint": "A Mermaid flowchart, for docs and wikis.",
+  "exportPngHint": "An image of this level as it is laid out.",
+  "exportNote": "Agent requests and replies are not included.",
+  "chooseSecondBlock": "Choose the second block",
+  "connectFromPrompt": "Arrow from “{title}” — click the target card",
+  "@connectFromPrompt": {
+    "description": "Live connection prompt, naming the card the arrow starts from.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "@chooseSecondBlock": {
+    "description": "Foldboard UI: choose second block."
+  },
+  "cancelArrow": "Cancel connection",
+  "@cancelArrow": {
+    "description": "Foldboard UI: cancel arrow."
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Foldboard UI: open."
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Foldboard UI: delete."
+  },
+  "clearSelection": "Clear selection",
+  "@clearSelection": {
+    "description": "Foldboard UI: clear selection."
+  },
+  "searchHint": "Name or description",
+  "@searchHint": {
+    "description": "Foldboard UI: search hint."
+  },
+  "closeDetails": "Close details",
+  "@closeDetails": {
+    "description": "Foldboard UI: close details."
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Foldboard UI: name."
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Foldboard UI: description."
+  },
+  "onBoard": "On the board",
+  "@onBoard": {
+    "description": "Foldboard UI: on board."
+  },
+  "drawArrow": "Draw arrow",
+  "@drawArrow": {
+    "description": "Foldboard UI: draw arrow."
+  },
+  "deleteTitle": "Delete “{name}”?",
+  "@deleteTitle": {
+    "description": "Foldboard UI: delete title.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteFoldMessage": "Contents will move up one level. Connections to this fold card will be deleted.",
+  "@deleteFoldMessage": {
+    "description": "Foldboard UI: delete folds message."
+  },
+  "deleteBlockMessage": "Connected arrows will also be deleted.",
+  "@deleteBlockMessage": {
+    "description": "Foldboard UI: delete block message."
+  },
+  "deleteArrowMessage": "Only this arrow will be deleted.",
+  "@deleteArrowMessage": {
+    "description": "Foldboard UI: delete arrow message."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Foldboard UI: cancel."
+  },
+  "focusArea": "Focus this area",
+  "@focusArea": {
+    "description": "Foldboard UI: focus folds."
+  },
+  "selectAndMove": "Select and move",
+  "@selectAndMove": {
+    "description": "Foldboard UI: select and move."
+  },
+  "panAnywhere": "Pan anywhere",
+  "@panAnywhere": {
+    "description": "Foldboard UI: pan anywhere."
+  },
+  "arrange": "Tidy",
+  "@arrange": {
+    "description": "Foldboard UI: arrange."
+  },
+  "rebuildLayout": "Rebuild layout",
+  "@rebuildLayout": {
+    "description": "Foldboard UI: rebuild layout."
+  },
+  "fitContent": "Fit content",
+  "@fitContent": {
+    "description": "Foldboard UI: fit content."
+  },
+  "zoomIn": "Zoom in",
+  "@zoomIn": {
+    "description": "Foldboard UI: zoom in."
+  },
+  "zoomOut": "Zoom out",
+  "@zoomOut": {
+    "description": "Foldboard UI: zoom out."
+  },
+  "zoomPercent": "{value}%",
+  "@zoomPercent": {
+    "description": "Foldboard UI: zoom percent.",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Foldboard UI: close."
+  },
+  "storageReadFailed": "Could not open the saved board. The original data has not been overwritten.",
+  "@storageReadFailed": {
+    "description": "Foldboard UI: storage read failed."
+  },
+  "storageWriteFailed": "Could not save the board. Export JSON before closing.",
+  "@storageWriteFailed": {
+    "description": "Foldboard UI: storage write failed."
+  },
+  "changeFailed": "Could not apply this change. Check the selected objects and connections.",
+  "@changeFailed": {
+    "description": "Foldboard UI: change failed."
+  },
+  "openFold": "Open fold",
+  "outside": "Outside · Open original",
+  "referenceInput": "Input · Outside",
+  "referenceOutput": "Output · Outside",
+  "referenceBoth": "Input / Output · Outside",
+  "thisFold": "This fold · Go up",
+  "upOneLevel": "Up one level",
+  "rootLevel": "Board",
+  "moveTo": "Move to level",
+  "details": "Details",
+  "connectionCount": "{count} connections",
+  "deleteConnections": "Delete all {count} connections represented by this arrow?",
+  "@openFold": {
+    "description": "Enter a fold from its card."
+  },
+  "@outside": {
+    "description": "Level navigation: outside"
+  },
+  "@thisFold": {
+    "description": "The fold you are inside, shown from within."
+  },
+  "@upOneLevel": {
+    "description": "Level navigation: upOneLevel"
+  },
+  "@rootLevel": {
+    "description": "Level navigation: rootLevel"
+  },
+  "@moveTo": {
+    "description": "Level navigation: moveTo"
+  },
+  "@details": {
+    "description": "Level navigation: details"
+  },
+  "@connectionCount": {
+    "description": "Level navigation: connectionCount",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@deleteConnections": {
+    "description": "Level navigation: deleteConnections",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Application settings: settings"
+  },
+  "settingsLocalHint": "Saved automatically in this browser. Applies to all projects.",
+  "@settingsLocalHint": {
+    "description": "Application settings: settingsLocalHint"
+  },
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Application settings: appearance"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Application settings: theme"
+  },
+  "darkTheme": "Dark",
+  "@darkTheme": {
+    "description": "Application settings: darkTheme"
+  },
+  "lightTheme": "Light",
+  "@lightTheme": {
+    "description": "Application settings: lightTheme"
+  },
+  "systemTheme": "System",
+  "@systemTheme": {
+    "description": "Application settings: systemTheme"
+  },
+  "showGrid": "Show grid",
+  "@showGrid": {
+    "description": "Application settings: showGrid"
+  },
+  "showGridHint": "Display dots on the board background.",
+  "@showGridHint": {
+    "description": "Application settings: showGridHint"
+  },
+  "resetSettings": "Reset settings",
+  "@resetSettings": {
+    "description": "Application settings: resetSettings"
+  },
+  "resetSettingsHint": "Restore the dark theme and show the grid. Your projects and boards will not change.",
+  "@resetSettingsHint": {
+    "description": "Application settings: resetSettingsHint"
+  },
+  "reset": "Reset",
+  "@reset": {
+    "description": "Application settings: reset"
+  },
+  "settingsReadFailed": "Could not read saved settings. Defaults are shown; use Reset settings to recover.",
+  "@settingsReadFailed": {
+    "description": "Application settings: settingsReadFailed"
+  },
+  "readOnly": "Read only",
+  "readOnlyHint": "Read only — another tab is editing. You can browse, search and export. Close the editing tab and reload to edit here.",
+  "projectsActionFailed": "Could not complete this action. Your projects have not been changed. Try again.",
+  "settingsWriteFailed": "Could not save settings in this browser. Your previous settings are still active. Try again.",
+  "@settingsWriteFailed": {
+    "description": "Application settings: settingsWriteFailed"
+  },
+  "agents": "Agents",
+  "@agents": {
+    "description": "Settings section covering WebMCP agent access."
+  },
+  "about": "About",
+  "@about": {
+    "description": "Settings section with build and storage facts."
+  },
+  "version": "Version",
+  "@version": {
+    "description": "About row: the running app version."
+  },
+  "storageLabel": "Storage",
+  "@storageLabel": {
+    "description": "About row: where boards are kept."
+  },
+  "storageAboutHint": "Boards live in this browser, under this exact address. There is no server copy — export a board to move or back it up.",
+  "@storageAboutHint": {
+    "description": "About row: explains the local-only storage model."
+  },
+  "webMcp": "WebMCP",
+  "@webMcp": {
+    "description": "About row: agent bridge status."
+  },
+  "webMcpConnected": "Connected · {count} tools registered",
+  "@webMcpConnected": {
+    "description": "About row: a WebMCP client picked up the tools.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "webMcpUnavailable": "No WebMCP client detected. Foldboard works without one.",
+  "@webMcpUnavailable": {
+    "description": "About row: no agent bridge in this browser."
+  },
+  "agentConnection": "Agent connection",
+  "@agentConnection": {
+    "description": "Plain-language label for agent bridge availability."
+  },
+  "agentConnectionReady": "Ready",
+  "@agentConnectionReady": {
+    "description": "Plain-language status when the agent bridge is available."
+  },
+  "agentConnectionUnavailable": "Not connected",
+  "@agentConnectionUnavailable": {
+    "description": "Plain-language status when the agent bridge is unavailable."
+  },
+  "technicalDetails": "Technical details",
+  "@technicalDetails": {
+    "description": "Expandable settings row containing implementation details."
+  },
+  "dangerZone": "Danger zone",
+  "@dangerZone": {
+    "description": "Settings section for destructive actions."
+  },
+  "keyboardShortcuts": "Keyboard shortcuts",
+  "@keyboardShortcuts": {
+    "description": "Dialog listing every board shortcut."
+  },
+  "keyboardShortcutsHint": "These work while the board has focus.",
+  "@keyboardShortcutsHint": {
+    "description": "Subtitle of the keyboard shortcuts dialog."
+  },
+  "shortcutsBoard": "Board",
+  "@shortcutsBoard": {
+    "description": "Shortcut group: viewing the board."
+  },
+  "shortcutsEditing": "Editing",
+  "@shortcutsEditing": {
+    "description": "Shortcut group: changing the board."
+  },
+  "shortcutsNavigation": "Navigation",
+  "@shortcutsNavigation": {
+    "description": "Shortcut group: moving around with the keyboard."
+  },
+  "shortcutSearch": "Search every level",
+  "@shortcutSearch": {
+    "description": "Shortcut: open board search."
+  },
+  "shortcutPan": "Pan the board",
+  "@shortcutPan": {
+    "description": "Shortcut: drag the canvas."
+  },
+  "shortcutZoom": "Zoom toward the pointer",
+  "@shortcutZoom": {
+    "description": "Shortcut: wheel zoom."
+  },
+  "shortcutHelp": "Show this list",
+  "@shortcutHelp": {
+    "description": "Shortcut: open the shortcuts dialog."
+  },
+  "shortcutDelete": "Delete the selection",
+  "@shortcutDelete": {
+    "description": "Shortcut: delete key."
+  },
+  "shortcutEscape": "Cancel a connection, then clear the selection",
+  "@shortcutEscape": {
+    "description": "Shortcut: escape key."
+  },
+  "shortcutMarquee": "Select several with a rectangle",
+  "@shortcutMarquee": {
+    "description": "Shortcut: shift-drag marquee selection on empty canvas."
+  },
+  "shortcutFocusCard": "Focus the next visible card",
+  "@shortcutFocusCard": {
+    "description": "Shortcut: tab key."
+  },
+  "shortcutOpen": "Open details, enter a fold, or go to the original",
+  "@shortcutOpen": {
+    "description": "Shortcut: enter key."
+  },
+  "shortcutMove": "Move the selected card",
+  "@shortcutMove": {
+    "description": "Shortcut: arrow keys."
+  },
+  "shortcutMoveFar": "Move it four times further",
+  "@shortcutMoveFar": {
+    "description": "Shortcut: shift with arrow keys."
+  },
+  "shortcutDuplicate": "Duplicate the selection",
+  "@shortcutDuplicate": {
+    "description": "Shortcut: duplicate a card in place."
+  },
+  "shortcutCopy": "Copy the selection",
+  "@shortcutCopy": {
+    "description": "Shortcut: copy a card."
+  },
+  "shortcutPaste": "Paste into this level",
+  "@shortcutPaste": {
+    "description": "Shortcut: paste a copied card."
+  },
+  "keyWheel": "Wheel",
+  "@keyWheel": {
+    "description": "Key legend: the mouse wheel."
+  },
+  "keyMiddleMouse": "Middle mouse",
+  "@keyMiddleMouse": {
+    "description": "Key legend: the middle mouse button."
+  },
+  "keyArrows": "Arrows",
+  "@keyArrows": {
+    "description": "Key legend: the four arrow keys."
+  },
+  "keyDrag": "drag",
+  "@keyDrag": {
+    "description": "Key legend suffix: hold and drag the pointer."
+  },
+  "emptyBoardTitle": "This level is empty",
+  "@emptyBoardTitle": {
+    "description": "Heading of the empty board state."
+  },
+  "emptyBoardBody": "Add a block for one part of the plan, or a fold for anything that has its own inner level.",
+  "@emptyBoardBody": {
+    "description": "Body of the empty board state."
+  },
+  "emptyBoardAgentHint": "An agent can fill it in too, over WebMCP.",
+  "@emptyBoardAgentHint": {
+    "description": "Footnote of the empty board state."
+  },
+  "blockCount": "{count, plural, =0{No blocks} =1{1 block} other{{count} blocks}}",
+  "@blockCount": {
+    "description": "Project card: number of blocks on the board.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "foldCount": "{count, plural, =0{no folds} =1{1 fold} other{{count} folds}}",
+  "@foldCount": {
+    "description": "Project card: number of folds on the board.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "arrowCount": "{count, plural, =0{no arrows} =1{1 arrow} other{{count} arrows}}",
+  "@arrowCount": {
+    "description": "Project card: number of arrows on the board.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "projectUnreadable": "Saved board could not be read",
+  "@projectUnreadable": {
+    "description": "Project card: its stored board is corrupt or unavailable."
+  },
+  "noProjectsTitle": "No projects yet",
+  "@noProjectsTitle": {
+    "description": "Heading shown when the catalog is empty."
+  },
+  "noProjectsBody": "A project is one independent board with its own levels, history and agent requests.",
+  "@noProjectsBody": {
+    "description": "Body shown when the catalog is empty."
+  },
+  "duplicateProject": "Duplicate project",
+  "@duplicateProject": {
+    "description": "Project action: copy a project and its board."
+  },
+  "projectCopyName": "{name} copy",
+  "@projectCopyName": {
+    "description": "Default name for a duplicated project.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPng": "PNG",
+  "@exportPng": {
+    "description": "Export format: an image of the current level."
+  },
+  "exportMermaid": "Mermaid",
+  "@exportMermaid": {
+    "description": "Export format: a Mermaid flowchart."
+  },
+  "exportImageFailed": "Could not create the image. Try again.",
+  "@exportImageFailed": {
+    "description": "The PNG export could not be rendered."
+  },
+  "duplicate": "Duplicate",
+  "@duplicate": {
+    "description": "Selection action: copy a card in place."
+  },
+  "copy": "Copy",
+  "@copy": {
+    "description": "Selection action: put a card on the Foldboard clipboard."
+  },
+  "paste": "Paste",
+  "@paste": {
+    "description": "Board action: place the copied card on this level."
+  },
+  "copiedCard": "Copied “{name}”",
+  "@copiedCard": {
+    "description": "Confirmation after copying a card.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clipboardEmpty": "Nothing has been copied yet.",
+  "@clipboardEmpty": {
+    "description": "Paste was requested with an empty clipboard."
+  },
+  "selectedCards": "{count} cards selected",
+  "@selectedCards": {
+    "description": "Summary shown when more than one board card is selected.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trace": "Trace",
+  "@trace": {
+    "description": "The mode that straightens one thread through the board into a single line."
+  },
+  "traceFromHere": "Trace from here",
+  "traceBetween": "Trace between",
+  "traceThrough": "Trace through",
+  "traceStraighten": "Straighten",
+  "@traceStraighten": {
+    "description": "Trace entry offered on an external card, whose thread leaves this level."
+  },
+  "traceNoConnection": "These cards are not connected, so there is no thread to straighten.",
+  "traceNothingToFollow": "No arrows to follow yet. Connect two cards, then trace.",
+  "traceStepCount": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@traceStepCount": {
+    "description": "Length of the straightened thread.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "traceFoldedCount": "{count, plural, =0{straightened} =1{1 fold folded} other{{count} folds folded}}",
+  "@traceFoldedCount": {
+    "description": "How much of the thread is folded back up.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "traceCollapseFold": "Fold {title} back into one card",
+  "@traceCollapseFold": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "traceStepsInside": "{count, plural, =1{1 step inside} other{{count} steps inside}}",
+  "@traceStepsInside": {
+    "description": "Shown on a folded card; opening it puts those steps back on the line.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "traceExpandAll": "Expand all",
+  "traceOpenHere": "Open where it lives",
+  "traceClose": "Close trace",
+  "traceBranchCount": "{count, plural, =1{1 branch} other{{count} branches}}",
+  "@traceBranchCount": {
+    "description": "Continuations this step has that the thread did not take.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "traceLoopsBack": "Loops back to {title}",
+  "@traceLoopsBack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "traceInto": "Into {title}",
+  "@traceInto": {
+    "description": "Tooltip on an arrow that crosses down into a fold.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "traceOutOf": "Out of {title}",
+  "@traceOutOf": {
+    "description": "Tooltip on an arrow that crosses up out of a fold.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "traceNoLoop": "This card has no way back to itself, so there is no loop to trace.",
+  "traceStartAt": "Start the thread at another card",
+  "traceEndAt": "End the thread at another card",
+  "traceRunOnStart": "Let the thread run back to its own start",
+  "traceRunOnEnd": "Let the thread run on to its own end",
+  "traceEnds": "{from} to {to}",
+  "@traceEnds": {
+    "description": "Accessible name for the two ends of the thread in the trace bar.",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "traceDensityCards": "Cards",
+  "traceDensityRead": "Text",
+  "traceCopyMarkdown": "Copy as Markdown",
+  "traceCopied": "The trace is on the clipboard as Markdown.",
+  "traceCopyFailed": "The clipboard is not available here. Select the text and copy it instead.",
+  "traceAnchor": "Traced from here",
+  "traceProfile": "Depth of the thread, step by step",
+  "shortcutTrace": "Trace from the selection",
+  "shortcutTraceStep": "Step along the trace",
+  "shortcutTraceBranch": "Take another branch",
+  "shortcutTraceOpen": "Open the step where it lives",
+  "shortcutTraceDensity": "Cards or Text",
+  "shortcutsTrace": "Trace",
+  "deleteSelectedCardsMessage": "The selected cards and their connected arrows will be deleted.",
+  "@deleteSelectedCardsMessage": {
+    "description": "Confirmation text for deleting multiple selected cards."
+  },
+  "overview": "Overview",
+  "overviewTooltip": "See the scale of the whole board",
+  "overviewReadOnly": "View only",
+  "overviewHint": "Scroll to zoom. Drag to move.",
+  "overviewEmptyTitle": "Nothing to map yet",
+  "overviewEmptyHint": "Add blocks to see the scale of the board here.",
+  "overviewOpenFold": "Open {title}",
+  "@overviewOpenFold": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "overviewStats": "{blocks} blocks · {connections} connections",
+  "@overviewStats": {
+    "placeholders": {
+      "blocks": {
+        "type": "int"
+      },
+      "connections": {
+        "type": "int"
+      }
+    }
+  }
+}

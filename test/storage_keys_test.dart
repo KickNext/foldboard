@@ -1,0 +1,64 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:foldboard/domain/models/project.dart';
+import 'package:foldboard/storage_keys.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('every key derives from the one prefix', () {
+    const p = StorageKeys.prefix;
+    expect(StorageKeys.settings, '$p.settings');
+    expect(StorageKeys.projects, '$p.projects');
+    expect(StorageKeys.projectBoard('abc'), '$p.project.abc.board');
+    expect(StorageKeys.projectRequests('abc'), '$p.project.abc.requests');
+    expect(StorageKeys.editorLock, '$p-editor');
+    expect(StorageKeys.jsNamespace, p);
+  });
+
+  test('the first project is stored like any other', () {
+    const first = Project(id: Project.defaultId, name: 'My project');
+    expect(first.boardKey, StorageKeys.projectBoard(Project.defaultId));
+    expect(first.requestsKey, StorageKeys.projectRequests(Project.defaultId));
+    const other = Project(id: 'p1', name: 'Other');
+    expect(other.boardKey, StorageKeys.projectBoard('p1'));
+    expect(other.requestsKey, StorageKeys.projectRequests('p1'));
+  });
+
+  test('webmcp.js, the bridge and the manifest use the Dart names', () {
+    final js = File('web/webmcp.js').readAsStringSync();
+    expect(js, contains('window.${StorageKeys.jsNamespace} = '));
+    expect(js, contains("'${StorageKeys.editorLock}'"));
+    final bridge = File('lib/webmcp/webmcp_bridge_web.dart').readAsStringSync();
+    expect(bridge, contains("@JS('${StorageKeys.jsNamespace}')"));
+    final manifest =
+        jsonDecode(File('web/manifest.json').readAsStringSync()) as Map;
+    expect(manifest['id'], StorageKeys.prefix);
+  });
+
+  test('no earlier app name survives in code, page or config', () {
+    // 'archy' only as a whole word: 'hierarchy' is fine.
+    final earlierNames = [RegExp('coboard'), RegExp(r'\barchy\b')];
+    final sources = [
+      ...Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))
+          .where((f) => !f.path.contains('generated')),
+      File('web/webmcp.js'),
+      File('web/index.html'),
+      File('web/manifest.json'),
+      File('pubspec.yaml'),
+    ];
+    for (final file in sources) {
+      final text = file.readAsStringSync().toLowerCase();
+      for (final name in earlierNames) {
+        expect(
+          name.hasMatch(text),
+          isFalse,
+          reason: '${file.path} names ${name.pattern}',
+        );
+      }
+    }
+  });
+}

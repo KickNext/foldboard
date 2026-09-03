@@ -1,0 +1,22 @@
+{
+  "undo": "Undo",
+  "redo": "Redo",
+  "history": "Undo / Redo",
+  "storageConflict": "Another tab owns editing access, or saved data has changed. Export any unsaved work, close the other Foldboard tabs, then reload this tab. Nothing was overwritten.",
+  "importJson": "Import JSON",
+  "importTitle": "Replace this board?",
+  "importHint": "The selected file replaces this board. Other projects are unchanged. You can undo the import.",
+  "importInvalid": "Could not import this file. Choose a valid Foldboard JSON file up to 10 MB. Your board is unchanged.",
+  "disconnect": "Disconnect",
+  "disconnectHint": "Remove connections between this external card and this level. The original card and connections in other levels will remain.",
+  "openOriginal": "Go to original",
+  "referenceHint": "External card. Its name and description belong to the original. Double-click to go there.",
+  "connectionExists": "This arrow already exists. Select another target or cancel.",
+  "removeProject": "Remove project",
+  "removeProjectHint": "Remove this project from the list? Its saved board is kept for recovery. You can restore it immediately.",
+  "projectRemoved": "Project removed",
+  "restoreProject": "Restore",
+  "moreActions": "More actions",
+  "keyboardHint": "Tab to focus cards. Enter opens details or follows a fold. Arrow keys move cards; Shift moves faster.",
+  "@@locale": "en_US"
+}

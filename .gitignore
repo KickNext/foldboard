@@ -1,0 +1,182 @@
+# =============================================================================
+# Operating systems
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100/
+.Spotlight-V100/
+.TemporaryItems/
+.Trashes/
+.fseventsd/
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+
+# Linux
+*~
+.directory
+.Trash-*/
+.nfs*
+
+# =============================================================================
+# Editors and IDEs
+# =============================================================================
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio / VS Code
+.vs/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Other editors
+.fleet/
+.atom/
+*.swp
+*.swo
+*.swn
+*.code-workspace
+
+# =============================================================================
+# Logs, temporary files and local caches
+# =============================================================================
+
+*.log
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.rej
+*.pid
+*.seed
+*.cache
+*.class
+.cache/
+.history/
+.build/
+.buildlog/
+tmp/
+temp/
+
+# =============================================================================
+# Local configuration, credentials and signing keys
+# =============================================================================
+
+.env
+.env.*
+!.env.example
+!.env.template
+*.local
+*.secret
+*.secrets
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+key.properties
+local.properties
+
+# =============================================================================
+# Dart and Flutter
+# =============================================================================
+
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter_tool_state
+.widget_preview/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+/build/
+/coverage/
+coverage/
+lcov.info
+
+# Flutter build diagnostics, symbols and obfuscation maps
+flutter_*.png
+app.*.symbols
+app.*.map.json
+
+# Generated migration workspace
+migrate_working_dir/
+
+# =============================================================================
+# Python tooling
+# =============================================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.venv/
+venv/
+env/
+
+# =============================================================================
+# Node.js and browser automation
+# =============================================================================
+
+node_modules/
+.npm/
+.yarn/cache/
+.yarn/unplugged/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.nyc_output/
+
+.playwright-cli/
+playwright-report/
+blob-report/
+test-results/
+
+# =============================================================================
+# Local generated output
+# =============================================================================
+
+/output/
+
+# Local workspace configuration and internal review artifacts
+/.claude/
+/artifacts/
+/ux-audit/
+
+# Keep application dependencies reproducible.
+!pubspec.lock

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Foldboard lets people and AI agents edit plans through bounded, nested context.">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111310">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F5F7F2">
+  <meta name="color-scheme" content="dark light">
+  <title>Foldboard</title>
+
+  <!-- Link previews. og:image must become an absolute URL once the app has a domain. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Foldboard">
+  <meta property="og:title" content="Foldboard — plans in bounded context">
+  <meta property="og:description" content="People and AI agents edit one shared plan through focused nested levels and WebMCP.">
+  <meta property="og:image" content="og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Foldboard mark: two cards joined by an arrow.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Foldboard — plans in bounded context">
+  <meta name="twitter:description" content="People and AI agents edit one shared plan through focused nested levels and WebMCP.">
+  <meta name="twitter:image" content="og-image.png">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Foldboard">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    /* Splash palette mirrors AppPalette in lib/ui/core/app_theme.dart. */
+    :root {
+      color-scheme: dark light;
+      --splash-bg: #111310;
+      --splash-mark: #B6F36B;
+      --splash-dim: #6D9240;
+      --splash-track: #30342D;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --splash-bg: #F5F7F2;
+        --splash-mark: #476B16;
+        --splash-dim: #71805E;
+        --splash-track: #CDD5C5;
+      }
+    }
+    html, body { margin: 0; padding: 0; height: 100%; background: var(--splash-bg); }
+
+    #splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      background: var(--splash-bg);
+      /* Nothing is shown for the first moment: a cached load should not flash. */
+      opacity: 0;
+      animation: splash-in 240ms ease-out 220ms forwards;
+      transition: opacity 220ms ease-out;
+      z-index: 2;
+    }
+    #splash.done { pointer-events: none; }
+    @keyframes splash-in { to { opacity: 1; } }
+
+    #splash svg { width: 76px; height: 76px; }
+    #splash .track {
+      width: 132px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--splash-track);
+      overflow: hidden;
+    }
+    #splash .track i {
+      display: block;
+      width: 40%;
+      height: 100%;
+      border-radius: 2px;
+      background: var(--splash-mark);
+      animation: splash-sweep 1.25s ease-in-out infinite;
+    }
+    @keyframes splash-sweep {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(330%); }
+    }
+    #splash .fallback {
+      font: 13px/1.4 "Segoe UI", system-ui, sans-serif;
+      color: var(--splash-dim);
+      max-width: 34ch;
+      text-align: center;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #splash { animation-delay: 0ms; }
+      #splash .track i { animation: none; width: 100%; opacity: .5; }
+    }
+  </style>
+</head>
+<body>
+  <div id="splash" role="status" aria-label="Loading Foldboard">
+    <svg viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+      <rect x="6" y="10" width="37" height="26" rx="7" fill="none"
+            stroke="var(--splash-mark)" stroke-width="5.5"/>
+      <path d="M24.5 36 V64 L33 72 H46" fill="none" stroke="var(--splash-dim)"
+            stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M54 72 L45 67.4 V76.6 Z" fill="var(--splash-dim)"/>
+      <rect x="55" y="59" width="37" height="26" rx="7" fill="var(--splash-mark)"/>
+    </svg>
+    <div class="track"><i></i></div>
+    <noscript>
+      <p class="fallback">Foldboard needs JavaScript. Enable it, then reload this page.</p>
+    </noscript>
+  </div>
+
+  <script src="webmcp.js"></script>
+  <script src="flutter_bootstrap.js" async></script>
+  <script>
+    // Flutter paints over the splash; fade it out and drop it from the tree.
+    window.addEventListener('flutter-first-frame', function () {
+      var splash = document.getElementById('splash');
+      if (!splash) return;
+      splash.classList.add('done');
+      // The fill-forwards intro animation outranks a class rule, so hand the
+      // element an inline opacity and let the transition run from there.
+      splash.style.animation = 'none';
+      splash.style.opacity = '1';
+      void splash.offsetWidth;
+      splash.style.opacity = '0';
+      splash.addEventListener('transitionend', function () { splash.remove(); });
+      setTimeout(function () { splash.remove(); }, 600);
+    });
+  </script>
+</body>
+</html>
