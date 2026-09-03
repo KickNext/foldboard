@@ -95,6 +95,7 @@ class _ArchitectureCanvasState extends State<ArchitectureCanvas>
   bool _suppressBackgroundTap = false;
   double _gestureStartScale = 1;
   int _cameraRequest = -1;
+  int _agentCameraVersion = -1;
   bool _firstLayout = true;
   // While armed, the opening fit re-checks itself every frame; any manual
   // pan or zoom (or a selection) hands the camera over to the person.
@@ -540,6 +541,29 @@ class _ArchitectureCanvasState extends State<ArchitectureCanvas>
                   padding: 70,
                 );
               }
+            });
+          }
+        }
+        if (_agentCameraVersion != widget.viewModel.agentChangeVersion) {
+          _agentCameraVersion = widget.viewModel.agentChangeVersion;
+          final version = _agentCameraVersion;
+          final createdIds = widget.viewModel.agentCreatedIds;
+          if (createdIds.isNotEmpty) {
+            _autoFitArmed = false;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted || version != widget.viewModel.agentChangeVersion) {
+                return;
+              }
+              final targets = widget.viewModel.canvasNodes
+                  .where((node) => createdIds.contains(node.id))
+                  .toList();
+              if (targets.isEmpty) return;
+              final bounds = targets
+                  .map((node) => node.position & nodeSize)
+                  .reduce((a, b) => a.expandToInclude(b));
+              // Show what the agent created while preserving the person's
+              // current zoom whenever the new cards fit at that scale.
+              _camera.fitBounds(bounds, padding: 90, maxScale: _camera.scale);
             });
           }
         }

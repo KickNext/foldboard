@@ -511,4 +511,47 @@ void main() {
       },
     );
   }
+
+  testWidgets('agent-created cards are framed without zooming in', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1200, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(FoldboardApp(viewModel: vm));
+    await tester.pumpAndSettle();
+
+    dynamic painter() => tester
+        .widgetList<CustomPaint>(find.byType(CustomPaint))
+        .map((widget) => widget.painter)
+        .firstWhere(
+          (value) => value.runtimeType.toString() == '_ViewportPainter',
+        );
+    final beforeScale = painter().camera.scale as double;
+
+    call(vm, 'apply-changes', {
+      'changes': {
+        'nodes': [
+          {
+            'id': 'agent-created',
+            'title': 'Created by agent',
+            'x': 10000,
+            'y': 5000,
+          },
+        ],
+      },
+    });
+    await tester.pump();
+    await tester.pump();
+
+    final camera = painter().camera;
+    final card = repo.nodes.firstWhere((node) => node.id == 'agent-created');
+    final cardCenter = card.position + const Offset(130, 59);
+    expect(
+      camera.worldToScreen(cardCenter),
+      offsetMoreOrLessEquals(camera.viewport.center(Offset.zero)),
+    );
+    expect(camera.scale, beforeScale);
+    await tester.pump(const Duration(seconds: 2));
+    expect(tester.takeException(), isNull);
+  });
 }

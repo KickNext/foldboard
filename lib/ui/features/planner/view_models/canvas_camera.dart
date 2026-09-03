@@ -55,13 +55,13 @@ class CanvasCamera extends ChangeNotifier {
   void zoomBy(Offset screenAnchor, double factor) =>
       zoomAt(screenAnchor, _scale * factor);
 
-  void fitBounds(Rect bounds, {double padding = 80}) {
+  void fitBounds(Rect bounds, {double padding = 80, double maxScale = 1.0}) {
     if (_viewport.isEmpty || bounds.isEmpty) return;
     final availableWidth = math.max(1.0, _viewport.width - padding * 2);
     final availableHeight = math.max(1.0, _viewport.height - padding * 2);
     _scale = math
         .min(availableWidth / bounds.width, availableHeight / bounds.height)
-        .clamp(minScale, 1.0);
+        .clamp(minScale, maxScale.clamp(minScale, CanvasCamera.maxScale));
     _translation = _viewport.center(Offset.zero) - bounds.center * _scale;
     notifyListeners();
   }

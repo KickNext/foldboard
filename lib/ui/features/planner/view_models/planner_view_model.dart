@@ -103,6 +103,7 @@ class PlannerViewModel extends ChangeNotifier {
   bool Function()? hasRequestDraft;
   Map<String, dynamic> Function()? readViewport;
   Set<String> agentChangedIds = {};
+  Set<String> agentCreatedIds = {};
   int agentChangeVersion = 0;
   int? agentChangeRevision;
   int agentChangeCount = 0;
@@ -1978,19 +1979,29 @@ class PlannerViewModel extends ChangeNotifier {
           throw FormatException('Unknown tool: $tool');
       }
       if (mutates) {
-        final patch = documentDiff(before!, snapshot());
-        final ids = affectedIds(patch, before: before);
+        final previous = before!;
+        final current = snapshot();
+        final patch = documentDiff(previous, current);
+        final ids = affectedIds(patch, before: previous);
         result.addAll({
           'affectedIds': ids,
           'changed': repository.revision != beforeRevision,
         });
         if (args['return'] == 'full') result['architecture'] = snapshot();
         if (repository.revision != beforeRevision && ids.isNotEmpty) {
+          Set<String> cardIds(Map<String, dynamic> document) => {
+            for (final item in [
+              ...document['nodes'] as List,
+              ...document['groups'] as List,
+            ])
+              (item as Map)['id'] as String,
+          };
+          agentCreatedIds = cardIds(current).difference(cardIds(previous));
           agentChangedIds = {
             ...ids,
             for (final e in [
-              ...(before['edges'] as List),
-              ...snapshot()['edges'] as List,
+              ...(previous['edges'] as List),
+              ...current['edges'] as List,
             ])
               if (ids.contains(e['id'])) ...[
                 e['from'] as String,
