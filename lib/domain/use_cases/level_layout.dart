@@ -111,15 +111,23 @@ class LevelLayout {
                   ? Offset(cross * 340 / 182, p.dx * 218 / 440)
                   : Offset(p.dx, cross);
             }
+            final rebuilt = mode == LevelLayoutMode.rebuild
+                ? _wrapRebuildForViewport(
+                    positions,
+                    vertical: vertical,
+                    width: width,
+                    height: height,
+                  )
+                : positions;
             final arranged = [
               for (final n in componentNodes)
-                n.copyWith(position: positions[n.id]),
+                n.copyWith(position: rebuilt[n.id]),
             ];
             final metrics =
                 measureRoutes?.call(arranged, componentEdges) ??
-                LayoutRouteMetrics(_bounds(positions));
-            final envelope = metrics.bounds.expandToInclude(_bounds(positions));
-            final normalized = positions.map(
+                LayoutRouteMetrics(_bounds(rebuilt));
+            final envelope = metrics.bounds.expandToInclude(_bounds(rebuilt));
+            final normalized = rebuilt.map(
               (id, p) => MapEntry(id, p - envelope.topLeft),
             );
             final piece = _Piece(
@@ -128,6 +136,7 @@ class LevelLayout {
               metrics,
               vertical,
               _movement(normalized, componentNodes, anchorId),
+              wrapped: !identical(rebuilt, positions),
             );
             if (best == null ||
                 _compare(piece, best, width, height, creationVertical) < 0) {
@@ -163,6 +172,7 @@ class LevelLayout {
               metrics,
               current.vertical,
               _movement(swapped, componentNodes, anchorId),
+              wrapped: current.wrapped,
             );
             if (_compare(candidate, current, width, height, creationVertical) <
                 0) {
@@ -171,10 +181,10 @@ class LevelLayout {
           }
         }
       }
-      if (preferredVertical == null) {
+      if (preferredVertical == null && !best!.wrapped) {
         final createdNodes = [
           for (final node in componentNodes)
-            node.copyWith(position: best!.positions[node.id]),
+            node.copyWith(position: best.positions[node.id]),
         ];
         final direction = _sketchDirection(createdNodes, componentRankingEdges);
         if (direction != null) {
@@ -524,6 +534,86 @@ class LevelLayout {
     return distance / candidate.length;
   }
 
+  Map<String, Offset> _wrapRebuildForViewport(
+    Map<String, Offset> source, {
+    required bool vertical,
+    required double width,
+    required double height,
+  }) {
+    if (source.length < 7) return source;
+    double flow(Offset p) => vertical ? p.dy : p.dx;
+    double cross(Offset p) => vertical ? p.dx : p.dy;
+    Offset position(double flowValue, double crossValue) => vertical
+        ? Offset(crossValue, flowValue)
+        : Offset(flowValue, crossValue);
+
+    final ranks = <double, List<String>>{};
+    for (final entry in source.entries) {
+      (ranks[flow(entry.value)] ??= []).add(entry.key);
+    }
+    final rankValues = ranks.keys.toList()..sort();
+    if (rankValues.length < 7) return source;
+
+    final gaps = <double>[
+      for (var i = 1; i < rankValues.length; i++)
+        rankValues[i] - rankValues[i - 1],
+    ];
+    final flowStep = _median(gaps);
+    final crossCardSize = vertical ? cardSize.width : cardSize.height;
+    var totalRankExtent = 0.0;
+    for (final rank in rankValues) {
+      final values = [for (final id in ranks[rank]!) cross(source[id]!)];
+      totalRankExtent +=
+          values.reduce(math.max) - values.reduce(math.min) + crossCardSize;
+    }
+    final averageCrossStep = totalRankExtent / rankValues.length + 100;
+    final flowViewport = vertical ? height : width;
+    final crossViewport = vertical ? width : height;
+    final ideal = math.sqrt(
+      rankValues.length *
+          averageCrossStep *
+          flowViewport /
+          (flowStep * crossViewport),
+    );
+    final ranksPerBand = math.max(
+      2,
+      math.min(rankValues.length, ideal.round()),
+    );
+    if (ranksPerBand >= rankValues.length) return source;
+
+    final result = <String, Offset>{};
+    var crossCursor = 0.0;
+    for (
+      var start = 0, band = 0;
+      start < rankValues.length;
+      start += ranksPerBand, band++
+    ) {
+      final end = math.min(start + ranksPerBand, rankValues.length);
+      var bandMin = double.infinity;
+      var bandMax = double.negativeInfinity;
+      for (var i = start; i < end; i++) {
+        for (final id in ranks[rankValues[i]]!) {
+          final value = cross(source[id]!);
+          bandMin = math.min(bandMin, value);
+          bandMax = math.max(bandMax, value + crossCardSize);
+        }
+      }
+      for (var i = start; i < end; i++) {
+        final offset = i - start;
+        final slot = band.isEven ? offset : ranksPerBand - 1 - offset;
+        for (final id in ranks[rankValues[i]]!) {
+          result[id] = position(
+            slot * flowStep,
+            cross(source[id]!) - bandMin + crossCursor,
+          );
+        }
+      }
+      crossCursor += bandMax - bandMin + 100;
+    }
+    final bounds = _bounds(result);
+    return result.map((id, p) => MapEntry(id, p - bounds.topLeft));
+  }
+
   int _compare(
     _Piece a,
     _Piece b,
@@ -562,11 +652,13 @@ class _Piece {
     this.size,
     this.metrics,
     this.vertical,
-    this.movement,
-  );
+    this.movement, {
+    this.wrapped = false,
+  });
   final Map<String, Offset> positions;
   final Size size;
   final LayoutRouteMetrics metrics;
   final bool vertical;
   final double movement;
+  final bool wrapped;
 }

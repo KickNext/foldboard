@@ -4,7 +4,7 @@ Foldboard exposes one plan to a person and an AI agent while keeping each task
 inside a bounded context. Agents inspect the outline, read only the required
 area and apply revision-checked changes without taking over the person's view.
 
-Foldboard registers 17 tools through
+Foldboard registers 18 tools through
 `document.modelContext.registerTool`, using the
 [WebMCP draft API](https://webmachinelearning.github.io/webmcp/). Registration
 is retried when the API appears late or the page regains focus. Registered tools
@@ -58,6 +58,8 @@ a project before calling board tools.
   request counters.
 - `reveal-card` — open a card's parent level, select it and move the camera.
   This changes navigation, not board data.
+- `fit-content` — frame every card in the person's current level without
+  changing card coordinates or rebuilding the layout.
 - `validate-architecture` — paginated warnings for disconnected cards, missing
   text, duplicate names and excessive nesting. It never edits the board.
 - `get-changes` — compact patch or revision events since `sinceRevision`.

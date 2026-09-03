@@ -1423,17 +1423,19 @@ class PlannerViewModel extends ChangeNotifier {
     };
     final viewport = readViewport?.call();
     final zoom = (viewport?['zoom'] as num?)?.toDouble() ?? 1;
-    // Freeze the layout preference for this level during a session. Resizing
-    // the chat or panning must not flip a previously arranged graph.
-    final available = _arrangeViewports.putIfAbsent(
-      scope,
-      () => scope == currentLevelId && viewport != null
-          ? Size(
-              (viewport['width'] as num).toDouble() * zoom,
-              (viewport['height'] as num).toDouble() * zoom,
-            )
-          : const Size(1280, 800),
-    );
+    final liveAvailable = scope == currentLevelId && viewport != null
+        ? Size(
+            (viewport['width'] as num).toDouble() * zoom,
+            (viewport['height'] as num).toDouble() * zoom,
+          )
+        : const Size(1280, 800);
+    // Tidy keeps the level's established direction during a session. Rebuild
+    // is an explicit request for a fresh composition, so it uses the current
+    // screen and replaces the cached preference.
+    final available = rebuild
+        ? liveAvailable
+        : _arrangeViewports.putIfAbsent(scope, () => liveAvailable);
+    if (rebuild) _arrangeViewports[scope] = available;
     final positions = LevelLayout(ranker: _autoLayout)(
       nodes: graph.nodes.map((n) => n.copyWith(clearParent: true)).toList(),
       edges: graph.edges,
@@ -1862,6 +1864,9 @@ class PlannerViewModel extends ChangeNotifier {
           }
           revealObject(id);
           result['revealedId'] = id;
+        case 'fit-content':
+          fitContent();
+          result['fittedLevelId'] = currentLevelId;
         case 'validate-architecture':
           final issues = AgentQueries(
             nodes,

@@ -194,6 +194,34 @@ void main() {
     clear(rebuilt);
   });
 
+  test('Rebuild wraps a long chain to the viewport aspect ratio', () {
+    final nodes = [for (var i = 0; i < 24; i++) node('n$i')];
+    final edges = [for (var i = 0; i < 23; i++) edge('n$i', 'n${i + 1}')];
+    final rebuilt = arrange(
+      nodes,
+      edges,
+      viewport: const Size(1280, 800),
+      mode: LevelLayoutMode.rebuild,
+    );
+
+    final frame = bounds(rebuilt);
+    expect(rebuilt.values.map((p) => p.dx).toSet().length, greaterThan(2));
+    expect(rebuilt.values.map((p) => p.dy).toSet().length, greaterThan(2));
+    expect(frame.width / frame.height, inInclusiveRange(0.8, 3.2));
+    expect(frame.width, lessThan(3000));
+    expect(frame.height, lessThan(2000));
+    expect(
+      arrange(
+        [for (final n in nodes) n.copyWith(position: rebuilt[n.id])],
+        edges,
+        viewport: const Size(1280, 800),
+        mode: LevelLayoutMode.rebuild,
+      ),
+      rebuilt,
+    );
+    clear(rebuilt);
+  });
+
   test('Tidy snaps one selected outlier to the majority rail', () {
     const rail = -278.0039255853127;
     final nodes = [

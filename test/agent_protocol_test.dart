@@ -295,6 +295,20 @@ void main() {
     },
   );
 
+  test('fit-content frames the current level without rebuilding it', () {
+    call(vm, 'reveal-card', {'id': 'api'});
+    final revision = repo.revision;
+    final requestVersion = vm.cameraRequestVersion;
+
+    final result = call(vm, 'fit-content');
+
+    expect(result['ok'], isTrue);
+    expect(result['fittedLevelId'], 'inner');
+    expect(vm.cameraTargetId, isNull);
+    expect(vm.cameraRequestVersion, requestVersion + 1);
+    expect(repo.revision, revision);
+  });
+
   test('read-only blocks agent writes but allows reads, navigation and human edits', () {
     vm.agentCanWrite = () => false;
     final before = vm.prettyJson;
@@ -312,6 +326,7 @@ void main() {
     expect(call(vm, 'get-outline')['ok'], isTrue);
     expect(call(vm, 'export-architecture')['ok'], isTrue);
     expect(call(vm, 'reveal-card', {'id': 'api'})['ok'], isTrue);
+    expect(call(vm, 'fit-content')['ok'], isTrue);
     vm.addNode(title: 'Human edit');
     expect(vm.nodes.last.title, 'Human edit');
     expect(call(vm, 'get-user-context')['context']['agentCanWrite'], isFalse);

@@ -102,7 +102,7 @@ Exports do not include agent requests or replies.
 
 ## Agents
 
-Foldboard registers 17 tools on `document.modelContext`. The visual interface
+Foldboard registers 18 tools on `document.modelContext`. The visual interface
 also works without a WebMCP client.
 
 Agents start with a compact outline and read focused context with `get-area`

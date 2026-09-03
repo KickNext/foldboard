@@ -28,14 +28,15 @@ test('late document API is retried; repeated events never duplicate registration
   assert.equal(h.timers.size, 1);
   h.document.modelContext = {async registerTool(tool) {assert(!registered.has(tool.name)); registered.set(tool.name, tool);}};
   await h.tick();
-  assert.equal(registered.size, 17);
+  assert.equal(registered.size, 18);
   for (const event of ['load', 'focus', 'pageshow', 'visibilitychange']) {h.listeners[event](); await h.drain();}
   await h.ready();
-  assert.equal(registered.size, 17);
-  assert.equal(JSON.parse(h.window.foldboard.mcpStatus()).registered, 17);
+  assert.equal(registered.size, 18);
+  assert.equal(JSON.parse(h.window.foldboard.mcpStatus()).registered, 18);
   const result = await registered.get('get-outline').execute({});
   assert.equal(result.tool, 'get-outline');
   assert.equal(registered.get('reveal-card').annotations.readOnlyHint, false);
+  assert.equal(registered.get('fit-content').annotations.readOnlyHint, false);
   assert.equal(registered.get('get-user-context').annotations.readOnlyHint, true);
   assert.equal(registered.get('apply-changes').inputSchema.properties.return.default, 'summary');
   assert.equal(registered.get('apply-changes').inputSchema.properties.validate.default, false);
@@ -96,7 +97,7 @@ test('registration retry series is bounded and resumes on focus', async () => {
   let count = 0;
   h.document.modelContext = {registerTool() {count++;}};
   h.listeners.focus(); await h.drain();
-  assert.equal(count, 17);
+  assert.equal(count, 18);
 });
 
 test('callback exceptions return a machine code without exposing details', async () => {
