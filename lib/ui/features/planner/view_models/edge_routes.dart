@@ -205,8 +205,11 @@ class EdgeRouter {
           ? localBounds.bottom + 64 + laneIndex * 24
           : localBounds.top - 64 - laneIndex * 24;
       final obstacles = routingBoxes.values.map((r) => r.inflate(16)).toList();
-      final sourceExit = start + Offset(24 * direction, 0);
-      final targetExit = end - Offset(24 * direction, 0);
+      // Give outer routes enough runway to turn into side ports. A 24px
+      // approach capped the rounded corner at 12px and made fan-in routes look
+      // like little hooks beside the card, especially when zoomed out.
+      final sourceExit = start + Offset(40 * direction, 0);
+      final targetExit = end - Offset(40 * direction, 0);
       if (obstacles.any(
         (r) =>
             r.contains(Offset(sourceExit.dx, lane)) ||
@@ -222,7 +225,7 @@ class EdgeRouter {
       final middle = _orthogonal(a, b, obstacles, verticalTracks);
       final last = _orthogonal(b, targetExit, obstacles, verticalTracks);
       final points = [start, ...first, ...middle.skip(1), ...last.skip(1), end];
-      addRoute(_rounded(edge, points));
+      addRoute(_rounded(edge, points, maxRadius: 20));
     }
     return _routes = List.unmodifiable(result);
   }
@@ -329,7 +332,11 @@ void _flattenCubic(
   _flattenCubic(mid, bcd, cd, d, out, depth + 1);
 }
 
-EdgeRoute _rounded(ArchitectureEdge edge, List<Offset> input) {
+EdgeRoute _rounded(
+  ArchitectureEdge edge,
+  List<Offset> input, {
+  double maxRadius = 12,
+}) {
   final corners = <Offset>[];
   for (final p in input) {
     if (corners.isNotEmpty && (corners.last - p).distance < .001) continue;
@@ -353,7 +360,7 @@ EdgeRoute _rounded(ArchitectureEdge edge, List<Offset> input) {
     final before = corners[i - 1] - p;
     final after = corners[i + 1] - p;
     final radius = math.min(
-      12.0,
+      maxRadius,
       math.min(before.distance, after.distance) / 2,
     );
     final enter = p + before / before.distance * radius;
