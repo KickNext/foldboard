@@ -652,9 +652,21 @@ class _ArchitectureCanvasState extends State<ArchitectureCanvas>
                 _,
               ) {
                 _autoFitArmed = false;
-                final factor = math.exp(-event.scrollDelta.dy * .0014);
-                _camera.zoomBy(event.localPosition, factor);
+                final keyboard = HardwareKeyboard.instance;
+                if (keyboard.isControlPressed || keyboard.isMetaPressed) {
+                  final factor = math.exp(-event.scrollDelta.dy * .0014);
+                  _camera.zoomBy(event.localPosition, factor);
+                } else {
+                  // On Flutter Web a Mac trackpad reports two-finger movement
+                  // as a scroll signal. Preserve both axes and follow normal
+                  // scroll direction instead of accidentally zooming.
+                  _camera.pan(-event.scrollDelta);
+                }
               });
+            } else if (event is PointerScaleEvent) {
+              // Browser pinch-to-zoom is distinct from two-finger scrolling.
+              _autoFitArmed = false;
+              _camera.zoomBy(event.localPosition, event.scale);
             }
           },
           child: ClipRect(
@@ -681,6 +693,7 @@ class _ArchitectureCanvasState extends State<ArchitectureCanvas>
                           Positioned.fill(
                             child: GestureDetector(
                               behavior: HitTestBehavior.opaque,
+                              trackpadScrollCausesScale: false,
                               onTapUp: (details) =>
                                   _selectAt(details.localPosition),
                               onScaleStart: (details) {

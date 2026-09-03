@@ -163,6 +163,74 @@ void main() {
     }
   }
 
+  testWidgets('trackpad scroll pans both axes and pinch zooms', (tester) async {
+    final repository = ArchitectureRepository()..clear();
+    repository.addNode(
+      const ArchitectureNode(
+        id: 'anchor',
+        title: 'Anchor',
+        position: Offset(500, 200),
+      ),
+    );
+    final vm = PlannerViewModel(repository: repository);
+    addTearDown(vm.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: defaultAppLocale,
+        home: Scaffold(body: ArchitectureCanvas(viewModel: vm)),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final anchor = find.text('Anchor');
+    final beforePan = tester.getTopLeft(anchor);
+    tester.binding.handlePointerEvent(
+      const PointerScrollEvent(
+        position: Offset(300, 400),
+        scrollDelta: Offset(70, 45),
+        kind: PointerDeviceKind.trackpad,
+      ),
+    );
+    await tester.pump();
+    final panDelta = tester.getTopLeft(anchor) - beforePan;
+    expect(panDelta.dx, closeTo(-70, .01));
+    expect(panDelta.dy, closeTo(-45, .01));
+
+    final beforeZoom = tester
+        .getRect(find.byKey(const ValueKey('node-anchor')))
+        .size;
+    tester.binding.handlePointerEvent(
+      const PointerScaleEvent(position: Offset(300, 400), scale: 1.25),
+    );
+    await tester.pump();
+    final afterZoom = tester
+        .getRect(find.byKey(const ValueKey('node-anchor')))
+        .size;
+    expect(afterZoom.width, closeTo(beforeZoom.width * 1.25, .01));
+    expect(afterZoom.height, closeTo(beforeZoom.height * 1.25, .01));
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+    final beforeModifiedWheel = tester
+        .getRect(find.byKey(const ValueKey('node-anchor')))
+        .size;
+    tester.binding.handlePointerEvent(
+      const PointerScrollEvent(
+        position: Offset(300, 400),
+        scrollDelta: Offset(0, -100),
+      ),
+    );
+    await tester.pump();
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+    final afterModifiedWheel = tester
+        .getRect(find.byKey(const ValueKey('node-anchor')))
+        .size;
+    expect(afterModifiedWheel.width, greaterThan(beforeModifiedWheel.width));
+    expect(repository.nodes.single.position, const Offset(500, 200));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('node stays attached to pointer at a scaled camera', (
     tester,
   ) async {

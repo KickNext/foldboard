@@ -130,7 +130,8 @@ The full tool catalogue, error codes and paging rules are in
 | `[`, `]`, `1`, `2` | in a trace: another branch, Cards or Read |
 | `Ctrl/⌘ Z`, `Ctrl/⌘ Shift Z` | undo, redo |
 | `Ctrl/⌘ D` / `Ctrl/⌘ C` / `Ctrl/⌘ V` | duplicate, copy, paste a card |
-| `Space` + drag, middle mouse | pan |
+| two-finger scroll, `Space` + drag, middle mouse | pan |
+| pinch, `Ctrl/⌘` + wheel | zoom |
 | `Tab`, `Enter`, arrows | focus a card, open it, move it |
 
 ## Development

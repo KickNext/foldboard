@@ -617,6 +617,14 @@
   "@keyWheel": {
     "description": "Key legend: the mouse wheel."
   },
+  "keyTwoFingerScroll": "Two-finger scroll",
+  "@keyTwoFingerScroll": {
+    "description": "Key legend: scrolling on a trackpad with two fingers."
+  },
+  "keyPinch": "Pinch",
+  "@keyPinch": {
+    "description": "Key legend: trackpad pinch gesture."
+  },
   "keyMiddleMouse": "Middle mouse",
   "@keyMiddleMouse": {
     "description": "Key legend: the middle mouse button."

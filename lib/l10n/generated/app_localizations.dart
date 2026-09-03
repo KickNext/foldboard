@@ -1237,6 +1237,18 @@ abstract class AppLocalizations {
   /// **'Wheel'**
   String get keyWheel;
 
+  /// Key legend: scrolling on a trackpad with two fingers.
+  ///
+  /// In en, this message translates to:
+  /// **'Two-finger scroll'**
+  String get keyTwoFingerScroll;
+
+  /// Key legend: trackpad pinch gesture.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinch'**
+  String get keyPinch;
+
   /// Key legend: the middle mouse button.
   ///
   /// In en, this message translates to:

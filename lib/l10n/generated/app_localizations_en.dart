@@ -661,6 +661,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get keyWheel => 'Wheel';
 
   @override
+  String get keyTwoFingerScroll => 'Two-finger scroll';
+
+  @override
+  String get keyPinch => 'Pinch';
+
+  @override
   String get keyMiddleMouse => 'Middle mouse';
 
   @override

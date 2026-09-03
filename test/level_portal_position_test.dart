@@ -145,9 +145,9 @@ void main() {
         vm.openLevel('app');
         await tester.pumpAndSettle();
         tester.binding.handlePointerEvent(
-          PointerScrollEvent(
+          PointerScaleEvent(
             position: card(tester, 'human').center,
-            scrollDelta: const Offset(0, -140),
+            scale: 1.22,
             kind: PointerDeviceKind.mouse,
           ),
         );
@@ -299,9 +299,9 @@ void main() {
       vm.openLevel('app');
       await tester.pumpAndSettle();
       tester.binding.handlePointerEvent(
-        PointerScrollEvent(
+        PointerScaleEvent(
           position: viewport(tester).center,
-          scrollDelta: const Offset(0, -100),
+          scale: 1.15,
           kind: PointerDeviceKind.mouse,
         ),
       );

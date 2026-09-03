@@ -42,7 +42,9 @@ class _KeyboardShortcutsDialogState extends State<KeyboardShortcutsDialog> {
         ([mod, 'F'], l10n.shortcutSearch),
         (['Space', '+ ${l10n.keyDrag}'], l10n.shortcutPan),
         ([l10n.keyMiddleMouse], l10n.shortcutPan),
-        ([l10n.keyWheel], l10n.shortcutZoom),
+        ([l10n.keyTwoFingerScroll], l10n.shortcutPan),
+        ([l10n.keyPinch], l10n.shortcutZoom),
+        ([mod, '+ ${l10n.keyWheel}'], l10n.shortcutZoom),
         (['?'], l10n.shortcutHelp),
       ],
       l10n.shortcutsEditing: [
