@@ -955,6 +955,11 @@ class _ArchitectureCanvasState extends State<ArchitectureCanvas>
         additive: _marqueeAdditive,
       );
       _suppressBackgroundTap = true;
+    } else {
+      // Starting marquee capture cancels the background tap recognizer. Treat
+      // a press-and-release without movement as the normal background click,
+      // so clearing a selection or selecting an edge never needs a retry.
+      _selectAt(_marqueeStart!);
     }
     setState(() {
       _marqueeStart = null;

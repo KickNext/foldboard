@@ -1183,7 +1183,7 @@ abstract class AppLocalizations {
   /// **'Cancel a connection, then clear the selection'**
   String get shortcutEscape;
 
-  /// Shortcut: shift-drag marquee selection on empty canvas.
+  /// Shortcut: drag marquee selection on empty canvas.
   ///
   /// In en, this message translates to:
   /// **'Select several with a rectangle'**

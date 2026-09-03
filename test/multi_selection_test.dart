@@ -108,6 +108,26 @@ void main() {
     expect(vm.selectedCardIds, {'c'});
   });
 
+  testWidgets('one click on empty canvas clears the selection', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1100, 650));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final vm = _board()..selectCard('a');
+    addTearDown(() {
+      vm.dispose();
+      vm.repository.dispose();
+    });
+    await tester.pumpWidget(_app(vm));
+    await tester.pumpAndSettle();
+
+    final selectedCard = tester.getRect(find.byKey(const ValueKey('node-a')));
+    await tester.tapAt(selectedCard.bottomCenter + const Offset(0, 40));
+    await tester.pump();
+
+    expect(vm.hasSelection, isFalse);
+  });
+
   testWidgets('Plain drag on empty canvas selects cards with a marquee', (
     tester,
   ) async {
