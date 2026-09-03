@@ -102,9 +102,8 @@ void main() {
     },
   );
 
-  for (final mode in ['select', 'pan', 'space', 'middle']) {
+  for (final mode in ['pan', 'space', 'middle']) {
     for (final overNode in [false, true]) {
-      if (mode == 'select' && overNode) continue;
       testWidgets('$mode pans 1:1 over ${overNode ? "a node" : "background"}', (
         tester,
       ) async {

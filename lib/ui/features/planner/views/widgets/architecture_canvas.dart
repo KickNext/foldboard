@@ -610,14 +610,14 @@ class _ArchitectureCanvasState extends State<ArchitectureCanvas>
                   keyboard.isMetaPressed;
               if (event.buttons & kPrimaryMouseButton == 0 ||
                   widget.viewModel.canvasTool != CanvasTool.select ||
-                  !additive ||
+                  _hoveredConnectionNodeId != null ||
                   _pointOverNode(event.localPosition)) {
                 return;
               }
               setState(() {
                 _marqueeStart = event.localPosition;
                 _marqueeCurrent = event.localPosition;
-                _marqueeAdditive = true;
+                _marqueeAdditive = additive;
               });
             }
           },

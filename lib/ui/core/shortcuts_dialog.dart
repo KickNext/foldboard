@@ -48,7 +48,7 @@ class _KeyboardShortcutsDialogState extends State<KeyboardShortcutsDialog> {
         (['?'], l10n.shortcutHelp),
       ],
       l10n.shortcutsEditing: [
-        (['Shift', '+ ${l10n.keyDrag}'], l10n.shortcutMarquee),
+        ([l10n.keyDrag], l10n.shortcutMarquee),
         ([mod, 'Z'], l10n.undo),
         ([mod, 'Shift', 'Z'], l10n.redo),
         ([mod, 'D'], l10n.shortcutDuplicate),

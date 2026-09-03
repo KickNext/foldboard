@@ -583,7 +583,7 @@
   },
   "shortcutMarquee": "Select several with a rectangle",
   "@shortcutMarquee": {
-    "description": "Shortcut: shift-drag marquee selection on empty canvas."
+    "description": "Shortcut: drag marquee selection on empty canvas."
   },
   "shortcutFocusCard": "Focus the next visible card",
   "@shortcutFocusCard": {

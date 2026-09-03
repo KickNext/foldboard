@@ -108,7 +108,7 @@ void main() {
     expect(vm.selectedCardIds, {'c'});
   });
 
-  testWidgets('Shift drag on empty canvas selects cards with a marquee', (
+  testWidgets('Plain drag on empty canvas selects cards with a marquee', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(1100, 650));
@@ -121,7 +121,6 @@ void main() {
     await tester.pumpWidget(_app(vm));
     await tester.pumpAndSettle();
 
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
     final a = tester.getRect(find.byKey(const ValueKey('node-a')));
     final b = tester.getRect(find.byKey(const ValueKey('node-b')));
     final gesture = await tester.startGesture(a.topLeft - const Offset(10, 10));
@@ -129,7 +128,6 @@ void main() {
     await tester.pump();
     expect(find.byKey(const Key('selection-marquee')), findsOneWidget);
     await gesture.up();
-    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
     await tester.pump();
 
     expect(vm.selectedCardIds, {'a', 'b'});
