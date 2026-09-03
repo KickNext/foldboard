@@ -49,6 +49,18 @@ double sharedVerticalLength(EdgeRoute a, EdgeRoute b) {
   return longest;
 }
 
+double longestVerticalRun(EdgeRoute route) {
+  var longest = 0.0;
+  for (var i = 1; i < route.points.length; i++) {
+    final a = route.points[i - 1];
+    final b = route.points[i];
+    if ((a.dx - b.dx).abs() < .001) {
+      longest = math.max(longest, (a.dy - b.dy).abs());
+    }
+  }
+  return longest;
+}
+
 void main() {
   test('stacked reference cards have separate feedback stems, not just horizontal lanes', () {
     final nodes = [
@@ -247,6 +259,11 @@ void main() {
       ]);
       expect(routes, hasLength(6));
       expect(routes[1].bounds.top, lessThan(260));
+      expect(
+        routes.where((route) => route.bounds.top < 260).map(longestVerticalRun),
+        everyElement(lessThan(2)),
+        reason: 'outer routes should sweep instead of forming terminal hooks',
+      );
       // Feedback is local to its endpoints, no longer forced below the whole board.
       expect(
         routes[5].bounds.bottom - routes[3].bounds.bottom,

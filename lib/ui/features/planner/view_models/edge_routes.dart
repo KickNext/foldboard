@@ -221,6 +221,17 @@ class EdgeRouter {
       }
       final a = Offset(sourceExit.dx, lane);
       final b = Offset(targetExit.dx, lane);
+      final sweep = _outerSweep(edge, start, end, lane, direction);
+      final sweepBlocked = routingBoxes.entries.any(
+        (entry) =>
+            entry.key != edge.from &&
+            entry.key != edge.to &&
+            _polylineHits(sweep.points, entry.value.inflate(12)),
+      );
+      if (!sweepBlocked) {
+        addRoute(sweep);
+        continue;
+      }
       final first = _orthogonal(sourceExit, a, obstacles, verticalTracks);
       final middle = _orthogonal(a, b, obstacles, verticalTracks);
       final last = _orthogonal(b, targetExit, obstacles, verticalTracks);
@@ -229,6 +240,45 @@ class EdgeRouter {
     }
     return _routes = List.unmodifiable(result);
   }
+}
+
+/// A feedback or obstacle-avoiding connection rises to its lane and returns
+/// to the target in two broad sweeps. The previous orthogonal terminal legs
+/// read as hooks when several routes fanned into the same card.
+EdgeRoute _outerSweep(
+  ArchitectureEdge edge,
+  Offset start,
+  Offset end,
+  double lane,
+  double direction,
+) {
+  final distance = (end.dx - start.dx).abs();
+  final runway = math.max(24.0, math.min(96.0, distance / 3));
+  final a = Offset(start.dx + runway * direction, lane);
+  final b = Offset(end.dx - runway * direction, lane);
+  final sourceControl = runway * .55;
+  final targetControl = runway * .45;
+  final sourceC1 = start + Offset(sourceControl * direction, 0);
+  final sourceC2 = a - Offset(targetControl * direction, 0);
+  final targetC1 = b + Offset(targetControl * direction, 0);
+  final targetC2 = end - Offset(sourceControl * direction, 0);
+  final path = Path()
+    ..moveTo(start.dx, start.dy)
+    ..cubicTo(sourceC1.dx, sourceC1.dy, sourceC2.dx, sourceC2.dy, a.dx, a.dy)
+    ..lineTo(b.dx, b.dy)
+    ..cubicTo(
+      targetC1.dx,
+      targetC1.dy,
+      targetC2.dx,
+      targetC2.dy,
+      end.dx,
+      end.dy,
+    );
+  final points = <Offset>[start];
+  _flattenCubic(start, sourceC1, sourceC2, a, points);
+  if ((points.last - b).distance > .001) points.add(b);
+  _flattenCubic(b, targetC1, targetC2, end, points);
+  return EdgeRoute(edge, path, points, endAngle: (end - targetC2).direction);
 }
 
 Offset _facingSidePort(
