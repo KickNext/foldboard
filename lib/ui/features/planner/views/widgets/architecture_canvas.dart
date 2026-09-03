@@ -1741,7 +1741,14 @@ class _ViewportPainter extends CustomPainter {
 
   void _drawSystemEdges(Canvas canvas) {
     final visible = camera.visibleWorldRect.inflate(260 / camera.scale);
-    for (final route in routes) {
+    // Paint the explicit selection last so crossings can never bury it.
+    final orderedRoutes = selectedEdgeId == null
+        ? routes
+        : [
+            ...routes.where((route) => route.edge.id != selectedEdgeId),
+            ...routes.where((route) => route.edge.id == selectedEdgeId),
+          ];
+    for (final route in orderedRoutes) {
       if (!visible.overlaps(route.bounds.inflate(12))) continue;
       final edge = route.edge;
       final selected = selectedEdgeId == edge.id;
@@ -1754,6 +1761,10 @@ class _ViewportPainter extends CustomPainter {
       final paint = Paint()
         ..color = selected
             ? palette.accent
+            : selectedEdgeId != null
+            ? palette.edgeMuted.withValues(
+                alpha: AppTheme.arrowSelectionMutedAlpha,
+              )
             : related && !travelling
             ? palette.edge
             : palette.edgeMuted
@@ -1766,6 +1777,19 @@ class _ViewportPainter extends CustomPainter {
       canvas.save();
       canvas.translate(camera.translation.dx, camera.translation.dy);
       canvas.scale(camera.scale);
+      if (selected) {
+        // A crisp background casing separates the active route from the grid
+        // and from any arrows it crosses without introducing a glow.
+        canvas.drawPath(
+          route.path,
+          Paint()
+            ..color = palette.background
+            ..strokeWidth = AppTheme.arrowSelectionCasing / camera.scale
+            ..strokeCap = StrokeCap.round
+            ..strokeJoin = StrokeJoin.round
+            ..style = PaintingStyle.stroke,
+        );
+      }
       canvas.drawPath(route.path, paint);
       if (travelling && progress > 0) {
         final metric = route.metric;
@@ -1812,8 +1836,23 @@ class _ViewportPainter extends CustomPainter {
     Color color,
     bool selected,
   ) {
+    final head = connectionArrowHead(
+      end,
+      tangent,
+      camera.scale,
+      emphasis: selected ? AppTheme.arrowSelectedHeadScale : 1,
+    );
+    if (selected) {
+      canvas.drawPath(
+        head,
+        Paint()
+          ..color = palette.background
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.4,
+      );
+    }
     canvas.drawPath(
-      connectionArrowHead(end, tangent, camera.scale),
+      head,
       Paint()
         ..color = color
         ..style = PaintingStyle.fill,

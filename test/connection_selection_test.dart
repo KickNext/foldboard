@@ -9,6 +9,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('explicit arrow selection has a strong visual hierarchy', () {
+    expect(
+      AppTheme.arrowSelectedStroke,
+      greaterThan(AppTheme.arrowStroke * 1.8),
+    );
+    expect(
+      AppTheme.arrowSelectionCasing,
+      greaterThan(AppTheme.arrowSelectedStroke + 2),
+    );
+    expect(AppTheme.arrowSelectionMutedAlpha, lessThanOrEqualTo(.3));
+    expect(AppTheme.arrowSelectedHeadScale, greaterThanOrEqualTo(1.2));
+  });
+
   for (final brightness in Brightness.values) {
     testWidgets('arrows highlight only the explicit selection: $brightness', (
       tester,
@@ -63,13 +76,27 @@ void main() {
       final palette = brightness == Brightness.dark
           ? AppPalette.dark
           : AppPalette.light;
-      void expectColors(List<Color> colors) {
+      void expectColors(List<Color> colors, {int? selectedIndex}) {
         final canvas = _PathColorsCanvas();
         painter().paint(canvas, const Size(1200, 700));
-        // Each route paints its line and then its arrowhead in the same color.
-        expect(canvas.colors.map((c) => c.toARGB32()).toList(), [
-          for (final color in colors) ...[color.toARGB32(), color.toARGB32()],
-        ]);
+        final expected = <Color>[];
+        for (var index = 0; index < colors.length; index++) {
+          if (index != selectedIndex) {
+            expected.addAll([colors[index], colors[index]]);
+          }
+        }
+        if (selectedIndex != null) {
+          expected.addAll([
+            palette.background,
+            palette.accent,
+            palette.background,
+            palette.accent,
+          ]);
+        }
+        expect(
+          canvas.colors.map((c) => c.toARGB32()).toList(),
+          expected.map((c) => c.toARGB32()).toList(),
+        );
         expect(identical(painter().routes, originalRoutes), isTrue);
       }
 
@@ -79,7 +106,10 @@ void main() {
       expectColors([palette.edge, palette.edge, palette.edgeMuted]);
       vm.selectEdge('bc');
       await tester.pumpAndSettle();
-      expectColors([palette.edgeMuted, palette.accent, palette.edgeMuted]);
+      final dimmed = palette.edgeMuted.withValues(
+        alpha: AppTheme.arrowSelectionMutedAlpha,
+      );
+      expectColors([dimmed, palette.accent, dimmed], selectedIndex: 1);
       await tester.tapAt(const Offset(1100, 600));
       await tester.pumpAndSettle();
       expect(vm.selectedEdgeId, isNull);

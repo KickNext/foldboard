@@ -4,8 +4,13 @@ import 'dart:ui';
 import '../../../../core/app_theme.dart';
 
 /// Compact tapered head with curved shoulders and a recessed tail.
-Path connectionArrowHead(Offset tip, double angle, double zoom) {
-  final size = math.sqrt(zoom).clamp(.7, 1.15);
+Path connectionArrowHead(
+  Offset tip,
+  double angle,
+  double zoom, {
+  double emphasis = 1,
+}) {
+  final size = math.sqrt(zoom).clamp(.7, 1.15) * emphasis;
   final direction = Offset.fromDirection(angle);
   final normal = Offset(-direction.dy, direction.dx);
   Offset at(double x, double y) =>

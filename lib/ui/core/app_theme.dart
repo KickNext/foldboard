@@ -136,7 +136,10 @@ abstract final class AppTheme {
   static const arrowStroke = 1.7;
   static const edgeIgnition = Duration(milliseconds: 480);
   static const edgeIgnitionCurve = Curves.easeInOutCubic;
-  static const arrowSelectedStroke = 2.3;
+  static const arrowSelectedStroke = 3.4;
+  static const arrowSelectionCasing = 5.8;
+  static const arrowSelectionMutedAlpha = .26;
+  static const arrowSelectedHeadScale = 1.24;
   static const arrowHeadLength = 9.0;
   static const arrowHeadHalfWidth = 4.5;
   static const radiusSmall = 5.0;
