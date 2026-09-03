@@ -1724,6 +1724,48 @@ class PlannerViewModel extends ChangeNotifier {
         return value;
       }
 
+      List<Map<String, dynamic>> newUnconnectedWarnings(
+        Map<String, dynamic> previous,
+        Map<String, dynamic> current,
+      ) {
+        Set<String> cardIds(Map<String, dynamic> document) => {
+          for (final item in [
+            ...document['nodes'] as List,
+            ...document['groups'] as List,
+          ])
+            (item as Map)['id'] as String,
+        };
+        final created = cardIds(current).difference(cardIds(previous));
+        if (created.isEmpty) return const [];
+        final parents = <String, String?>{
+          for (final item in [
+            ...current['nodes'] as List,
+            ...current['groups'] as List,
+          ])
+            (item as Map)['id'] as String: item['parentId'] as String?,
+        };
+        final connected = <String>{};
+        void touch(String id) {
+          String? next = id;
+          while (next != null && connected.add(next)) {
+            next = parents[next];
+          }
+        }
+
+        for (final edge in current['edges'] as List) {
+          touch((edge as Map)['from'] as String);
+          touch(edge['to'] as String);
+        }
+        return [
+          for (final id in created.where((id) => !connected.contains(id)))
+            {
+              'code': 'unconnected-card',
+              'severity': 'warning',
+              'ids': [id],
+            },
+        ];
+      }
+
       switch (tool) {
         case 'list-requests':
           if (requests.loadFailed) {
@@ -1903,6 +1945,7 @@ class PlannerViewModel extends ChangeNotifier {
               'wouldChange': patch.isNotEmpty,
               'affectedIds': affectedIds(patch, before: before),
               'summary': changeCounts(before, preview, patch),
+              'warnings': newUnconnectedWarnings(before, preview),
             });
             if (args['return'] == 'full') result['architecture'] = preview;
           } else if (args['replace'] == true) {
@@ -1987,6 +2030,9 @@ class PlannerViewModel extends ChangeNotifier {
           'affectedIds': ids,
           'changed': repository.revision != beforeRevision,
         });
+        if (tool == 'apply-changes') {
+          result['warnings'] = newUnconnectedWarnings(previous, current);
+        }
         if (args['return'] == 'full') result['architecture'] = snapshot();
         if (repository.revision != beforeRevision && ids.isNotEmpty) {
           Set<String> cardIds(Map<String, dynamic> document) => {

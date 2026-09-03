@@ -54,6 +54,10 @@ test('late document API is retried; repeated events never duplicate registration
   assert.equal(registered.get('get-changes').inputSchema.properties.mode.default, 'compact');
   assert.equal(registered.get('search-architecture').inputSchema.properties.limit.maximum, 100);
   assert(!registered.get('apply-changes').description.includes('from get-architecture'));
+  assert(registered.get('apply-changes').description.includes('Trace follows edges only'));
+  assert(changeSchema.edges.items.properties.from.description.includes('Upstream'));
+  assert(changeSchema.edges.items.properties.to.description.includes('Downstream'));
+  assert(registered.get('validate-architecture').description.includes('Run it after writes'));
   assert(!area.projectId.description.includes('from get-architecture'));
   assert(registered.get('list-projects').description.includes('use it directly'));
   const schemaChars = JSON.stringify([...registered.values()], null, 2).length;

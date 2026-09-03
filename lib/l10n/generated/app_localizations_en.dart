@@ -159,6 +159,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get undoAgentChangeTitle => 'Undo the agent\'s change?';
+
+  @override
+  String undoAgentChangeBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'This reverts the whole agent action and may remove all $count affected items. You can restore them with Redo until you reload the page.',
+      one: 'This reverts the whole agent action and may remove the item it created. You can restore it with Redo until you reload the page.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get undoAgentChangeConfirm => 'Undo agent change';
+
+  @override
   String get addBlock => 'Add block';
 
   @override

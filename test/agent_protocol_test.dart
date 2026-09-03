@@ -469,7 +469,7 @@ void main() {
 
   for (final width in [400.0, 1200.0]) {
     testWidgets(
-      'agent feedback does not shift canvas and Undo works at $width',
+      'agent feedback confirms Undo without shifting canvas at $width',
       (tester) async {
         await tester.binding.setSurfaceSize(Size(width, 900));
         addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -492,6 +492,17 @@ void main() {
         expect(tester.getRect(canvas), before);
         expect(find.text('Agent changed 1 item'), findsOneWidget);
         await tester.tap(find.widgetWithText(TextButton, 'Undo'));
+        await tester.pumpAndSettle();
+        expect(find.text("Undo the agent's change?"), findsOneWidget);
+        await tester.tap(find.byKey(const Key('cancel-agent-undo')));
+        await tester.pumpAndSettle();
+        expect(
+          repo.nodes.firstWhere((n) => n.id == 'human').title,
+          'Agent edit',
+        );
+        await tester.tap(find.widgetWithText(TextButton, 'Undo'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('confirm-agent-undo')));
         await tester.pumpAndSettle();
         expect(repo.nodes.firstWhere((n) => n.id == 'human').title, 'Human');
         expect(tester.getRect(canvas), before);

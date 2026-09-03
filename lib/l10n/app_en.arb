@@ -68,6 +68,16 @@
       }
     }
   },
+  "undoAgentChangeTitle": "Undo the agent's change?",
+  "undoAgentChangeBody": "{count, plural, one{This reverts the whole agent action and may remove the item it created. You can restore it with Redo until you reload the page.} other{This reverts the whole agent action and may remove all {count} affected items. You can restore them with Redo until you reload the page.}}",
+  "@undoAgentChangeBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "undoAgentChangeConfirm": "Undo agent change",
   "addBlock": "Add block",
   "addFold": "Add fold",
   "agentAnswered": "Agent answered a request",

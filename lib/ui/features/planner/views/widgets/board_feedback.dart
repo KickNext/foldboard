@@ -25,6 +25,36 @@ class BoardFeedback extends StatefulWidget {
 class _BoardFeedbackState extends State<BoardFeedback> {
   Object? _dismissedWarning;
 
+  Future<void> _confirmAgentUndo(PlannerViewModel vm) async {
+    final revision = vm.agentChangeRevision;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.undoAgentChangeTitle),
+        content: Text(context.l10n.undoAgentChangeBody(vm.agentChangeCount)),
+        actions: [
+          TextButton(
+            key: const Key('cancel-agent-undo'),
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            key: const Key('confirm-agent-undo'),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(context.l10n.undoAgentChangeConfirm),
+          ),
+        ],
+      ),
+    );
+    if (!mounted ||
+        confirmed != true ||
+        vm.agentChangeRevision != revision ||
+        !vm.canUndoAgentChange) {
+      return;
+    }
+    vm.undoAgentChange();
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = widget.viewModel;
@@ -94,7 +124,7 @@ class _BoardFeedbackState extends State<BoardFeedback> {
           ? context.l10n.viewRequests
           : null,
       onAction: agentNotice && vm.canUndoAgentChange
-          ? vm.undoAgentChange
+          ? () => _confirmAgentUndo(vm)
           : answered && widget.onOpenRequests != null
           ? () {
               widget.onOpenRequests!();

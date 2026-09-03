@@ -16,6 +16,12 @@ are not duplicated. The interface works without a WebMCP client.
 - Reading never navigates the person's interface.
 - Use `reveal-card` only when the person should be taken to a result.
 - Validate writes and pass `expectedRevision` to reject stale context.
+- Treat a plan as a directed flow, not a spatial list. Trace follows arrows;
+  placing cards near each other does not connect them.
+- Unless the person explicitly requests independent notes, connect every new
+  card to the plan with `from` → `to` arrows in the same atomic batch.
+- After a write, repair every `unconnected-card` warning and run
+  `validate-architecture`.
 - Writes are atomic and are rejected while the person is dragging.
 - People can attach requests to cards, arrows or the current level.
 
@@ -72,6 +78,8 @@ list-projects
 → get-area
 → apply-changes(validate: true)
 → apply-changes(expectedRevision)
+→ repair warnings when present
+→ validate-architecture
 → get-changes(sinceRevision, historyId)
 ```
 
@@ -140,6 +148,13 @@ Updates are matched by `id`; send only changed fields. `deleteIds` removes
 objects and their dependencies. `parentId: null` moves an object to the root.
 `replace: true` performs a full import. Invalid references or revision conflicts
 cancel the whole batch.
+
+An edge is directional: `from` is the upstream/source card and `to` is the
+downstream/next card. Every related set of cards should form a traversable path;
+branches and merges are valid. Isolated cards are appropriate only when the
+person explicitly asks for independent notes. `apply-changes` returns a
+`warnings` list when cards created by that batch have no connection. A warning
+does not cancel the atomic write, so add the missing arrows in a follow-up batch.
 
 Set `validate: true` to build and check the candidate without changing storage,
 revision, Undo, selection or highlights. A dry run is allowed in read-only mode

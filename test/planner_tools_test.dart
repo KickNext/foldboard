@@ -124,6 +124,56 @@ void main() {
     expect(vm.prettyJson, before);
   });
 
+  test('apply-changes warns when newly created cards are not connected', () {
+    final repo = sampleBoard();
+    final vm = PlannerViewModel(repository: repo);
+    addTearDown(vm.dispose);
+
+    final dryRun = call(vm, 'apply-changes', {
+      'validate': true,
+      'changes': {
+        'nodes': [
+          {'id': 'orphan', 'title': 'Orphan'},
+        ],
+      },
+    });
+    expect(dryRun['warnings'], [
+      {
+        'code': 'unconnected-card',
+        'severity': 'warning',
+        'ids': ['orphan'],
+      },
+    ]);
+    expect(repo.nodes.any((node) => node.id == 'orphan'), isFalse);
+
+    final connected = call(vm, 'apply-changes', {
+      'changes': {
+        'nodes': [
+          {'id': 'next-step', 'title': 'Next step'},
+        ],
+        'edges': [
+          {'id': 'client-next', 'from': 'web-client', 'to': 'next-step'},
+        ],
+      },
+    });
+    expect(connected['warnings'], isEmpty);
+
+    final written = call(vm, 'apply-changes', {
+      'changes': {
+        'nodes': [
+          {'id': 'orphan', 'title': 'Orphan'},
+        ],
+      },
+    });
+    expect(written['warnings'], [
+      {
+        'code': 'unconnected-card',
+        'severity': 'warning',
+        'ids': ['orphan'],
+      },
+    ]);
+  });
+
   test('deletion cleans arrows and reparents nested areas', () {
     final repo = sampleBoard();
     repo.applyChanges({

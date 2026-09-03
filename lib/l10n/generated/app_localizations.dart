@@ -343,6 +343,24 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{Agent changed 1 item} other{Agent changed {count} items}}'**
   String agentChanged(int count);
 
+  /// No description provided for @undoAgentChangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo the agent\'s change?'**
+  String get undoAgentChangeTitle;
+
+  /// No description provided for @undoAgentChangeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{This reverts the whole agent action and may remove the item it created. You can restore it with Redo until you reload the page.} other{This reverts the whole agent action and may remove all {count} affected items. You can restore them with Redo until you reload the page.}}'**
+  String undoAgentChangeBody(int count);
+
+  /// No description provided for @undoAgentChangeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo agent change'**
+  String get undoAgentChangeConfirm;
+
   /// No description provided for @addBlock.
   ///
   /// In en, this message translates to:
