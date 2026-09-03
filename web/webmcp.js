@@ -3,15 +3,24 @@
   // the lock below mirror StorageKeys in lib/storage_keys.dart.
   const app = window.foldboard = {hasWriteLock: false};
   // One editing session per origin. A lifetime lock prevents the read/write
-  // race that a localStorage timestamp check alone cannot prevent.
-  app.writeReady = new Promise(resolve => {
-    if (!navigator.locks) { resolve(false); return; }
+  // race that a localStorage timestamp check alone cannot prevent. A reload
+  // can briefly overlap the old document, so retry before declaring this tab
+  // read-only; a genuinely open editor keeps winning every attempt.
+  const tryWriteLock = () => new Promise(resolve => {
     navigator.locks.request('foldboard-editor', {ifAvailable: true}, lock => {
       app.hasWriteLock = !!lock;
       resolve(!!lock);
       if (lock) return new Promise(() => {});
     }).catch(() => resolve(false));
   });
+  app.writeReady = (async () => {
+    if (!navigator.locks) return false;
+    for (const delay of [0, 25, 50, 100, 200, 400, 800]) {
+      if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+      if (await tryWriteLock()) return true;
+    }
+    return false;
+  })();
   app.pickJson = () => new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.type = 'file'; input.accept = '.json,application/json';

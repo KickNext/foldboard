@@ -5,12 +5,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const source = fs.readFileSync(path.join(__dirname, '../web/webmcp.js'), 'utf8');
 
-function harness() {
+function harness({locks} = {}) {
   const listeners = {}, timers = new Map();
   let next = 0;
   const document = {addEventListener: (name, cb) => listeners[name] = cb, visibilityState: 'visible'};
   const window = {addEventListener: (name, cb) => listeners[name] = cb};
-  const navigator = {};
+  const navigator = locks ? {locks} : {};
   const context = {window, document, navigator, console: {warn() {}},
     setTimeout: cb => {timers.set(++next, cb); return next;},
     clearTimeout: id => timers.delete(id)};
@@ -21,6 +21,26 @@ function harness() {
     async ready() {window.foldboard.setHandler(raw => JSON.stringify({ok: true, tool: JSON.parse(raw).tool}), () => {}); await drain();},
   };
 }
+
+test('editor lock retries the short handoff race during reload', async () => {
+  let calls = 0;
+  const locks = {request(name, options, callback) {
+    assert.equal(name, 'foldboard-editor');
+    assert.equal(options.ifAvailable, true);
+    calls++;
+    return Promise.resolve(callback(calls === 1 ? null : {}));
+  }};
+  const h = harness({locks});
+  await h.drain();
+  assert.equal(calls, 1);
+  assert.equal(h.window.foldboard.hasWriteLock, false);
+
+  await h.tick();
+
+  assert.equal(calls, 2);
+  assert.equal(await h.window.foldboard.writeReady, true);
+  assert.equal(h.window.foldboard.hasWriteLock, true);
+});
 
 test('late document API is retried; repeated events never duplicate registration', async () => {
   const h = harness(), registered = new Map();
