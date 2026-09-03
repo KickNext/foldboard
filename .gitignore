@@ -116,6 +116,7 @@ local.properties
 **/doc/api/
 **/ios/Flutter/.last_build_id
 /build/
+/dist/
 /coverage/
 coverage/
 lcov.info
