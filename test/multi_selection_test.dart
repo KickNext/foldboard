@@ -154,18 +154,29 @@ void main() {
     expect(find.byKey(const Key('selection-marquee')), findsNothing);
   });
 
-  testWidgets('dragging one selected card moves the whole selection', (
+  testWidgets('cards selected by marquee move together when one is dragged', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(1100, 650));
     addTearDown(() => tester.binding.setSurfaceSize(null));
-    final vm = _board()..selectCards(['a', 'b']);
+    final vm = _board();
     addTearDown(() {
       vm.dispose();
       vm.repository.dispose();
     });
     await tester.pumpWidget(_app(vm));
     await tester.pumpAndSettle();
+
+    final aRect = tester.getRect(find.byKey(const ValueKey('node-a')));
+    final bRect = tester.getRect(find.byKey(const ValueKey('node-b')));
+    final marquee = await tester.startGesture(
+      aRect.topLeft - const Offset(10, 10),
+    );
+    await marquee.moveTo(bRect.bottomRight + const Offset(10, 10));
+    await tester.pump();
+    await marquee.up();
+    await tester.pump();
+    expect(vm.selectedCardIds, {'a', 'b'});
 
     final beforeA = vm.nodes.firstWhere((node) => node.id == 'a').position;
     final beforeB = vm.nodes.firstWhere((node) => node.id == 'b').position;
