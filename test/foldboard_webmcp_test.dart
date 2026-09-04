@@ -60,12 +60,30 @@ void main() {
     expect(changes.containsKey('version'), isFalse);
     expect(changes['revision']['minimum'], 0);
     expect(
+      changes['nodes']['items']['properties']['parentId']['description'],
+      allOf(contains('Containment only'), contains('never creates an arrow')),
+    );
+    expect(
+      changes['groups']['items']['properties']['parentId']['description'],
+      allOf(contains('Containment only'), contains('never creates an arrow')),
+    );
+    expect(
+      changes['edges']['description'],
+      allOf(
+        contains('only way to create arrows'),
+        contains('Every new edge needs id, from and to'),
+        contains('Connect concrete boundary cards across folds'),
+        contains('do not add a redundant fold-to-fold edge'),
+        contains('Splice each new flow into the existing flow'),
+      ),
+    );
+    expect(
       changes['edges']['items']['properties']['from']['description'],
-      allOf(contains('Upstream'), contains('inner exit')),
+      allOf(contains('Upstream'), contains('use its last inner card')),
     );
     expect(
       changes['edges']['items']['properties']['to']['description'],
-      allOf(contains('Downstream'), contains('inner entry')),
+      allOf(contains('Downstream'), contains('use its first inner card')),
     );
     expect(properties('create-project')['clientRequestId']['maxLength'], 128);
     expect(properties('get-area')['limit']['default'], 20);
@@ -76,21 +94,24 @@ void main() {
     expect(properties('search-architecture')['limit']['maximum'], 100);
     expect(
       tools['apply-changes']!.description,
-      contains('Trace follows edges only'),
-    );
-    expect(
-      tools['apply-changes']!.description,
       allOf(
-        contains('target fold enters its inner chain'),
-        contains('source fold continues from its inner exit'),
-        contains('Nested folds resolve recursively'),
-        contains('empty fold stays a step'),
+        contains('parentId only nests and never connects'),
+        contains('connect their concrete boundary cards across levels'),
+        contains('a2→b1, not A→B'),
+        contains('continued arrows inside both folds'),
+        contains('use a fold id directly only when it is empty'),
+        contains('never leave a disconnected mini-chain'),
+        contains('lint cannot detect an isolated mini-chain'),
       ),
     );
     expect(
       tools['validate-architecture']!.description,
-      contains('Run it after writes'),
+      allOf(
+        contains('Run it after writes'),
+        contains('separate mini-chain can pass this lint'),
+      ),
     );
+    expect(tools['get-area']!.description, contains('where to splice it'));
     expect(tools['list-projects']!.description, contains('use it directly'));
 
     final encoded = jsonEncode([

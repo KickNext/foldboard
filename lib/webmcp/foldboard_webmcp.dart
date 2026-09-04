@@ -44,7 +44,12 @@ final class FoldboardWebMcpCatalog {
         'description': string,
         'x': number,
         'y': number,
-        'parentId': nullableId,
+        'parentId': {
+          ...nullableId,
+          'description':
+              'Containment only: the owning fold id. This never creates an '
+              'arrow; add edges for every flow continuation.',
+        },
       }),
       'groups': rows({
         'id': string,
@@ -54,23 +59,39 @@ final class FoldboardWebMcpCatalog {
         'y': number,
         'width': number,
         'height': number,
-        'parentId': nullableId,
-      }),
-      'edges': rows({
-        'id': string,
-        'from': {
-          ...string,
+        'parentId': {
+          ...nullableId,
           'description':
-              'Upstream source card or fold id. A source fold continues from '
-              'its inner exit.',
-        },
-        'to': {
-          ...string,
-          'description':
-              'Downstream next card or fold id. A target fold continues at '
-              'its inner entry.',
+              'Containment only: the owning fold id. This never creates an '
+              'arrow; add edges for every flow continuation.',
         },
       }),
+      'edges': {
+        ...rows({
+          'id': string,
+          'from': {
+            ...string,
+            'description':
+                'Upstream card or empty-fold id. For a non-empty fold, use '
+                'its last inner card: the cross-level edge is projected onto '
+                'the fold at every ancestor level.',
+          },
+          'to': {
+            ...string,
+            'description':
+                'Downstream card or empty-fold id. For a non-empty fold, use '
+                'its first inner card: the cross-level edge is projected onto '
+                'the fold at every ancestor level.',
+          },
+        }),
+        'description':
+            'The only way to create arrows. parentId, order, coordinates and '
+            'containment never imply an arrow. Every new edge needs id, from '
+            'and to. Connect concrete boundary cards across folds; do not add '
+            'a redundant fold-to-fold edge for non-empty folds. Splice each '
+            'new flow into the existing flow unless the user explicitly '
+            'requested an independent component.',
+      },
       'referencePositions': {
         'type': 'object',
         'additionalProperties': {
@@ -208,8 +229,9 @@ final class FoldboardWebMcpCatalog {
       ),
       _tool(
         'validate-architecture',
-        'Read-only board lint. Run it after writes and repair '
-            'disconnected-card warnings.',
+        'Read-only board lint. Run it after writes and repair unconnected-card '
+            'warnings. A separate mini-chain can pass this lint, so also '
+            'verify its entry and exit edges with get-area.',
         _boardSchema(
           _object({
             'maxDepth': {...integer, 'maximum': 128, 'default': 8},
@@ -239,8 +261,9 @@ final class FoldboardWebMcpCatalog {
       ),
       _tool(
         'get-area',
-        'Read a bounded area without navigation. Follow paging flags; '
-            'return=full is recursive.',
+        'Read a bounded area without navigation. Before inserting a flow, read '
+            'its surrounding edges to identify where to splice it. Follow '
+            'paging flags; return=full is recursive.',
         _boardSchema(
           _object({
             'id': string,
@@ -263,11 +286,18 @@ final class FoldboardWebMcpCatalog {
       ),
       _tool(
         'apply-changes',
-        'Build directed flows with same-batch from→to edges. A target fold '
-            'enters its inner chain; a source fold continues from its inner '
-            'exit. Nested folds resolve recursively; an empty fold stays a '
-            'step. Trace follows edges only. Connect every new card unless '
-            'independent notes were requested. Repair warnings, then validate. '
+        'Create every arrow explicitly with same-batch from→to edges: parentId '
+            'only nests and never connects. For a continuous visible flow '
+            'through non-empty folds, connect their concrete boundary cards '
+            'across levels and let Foldboard project that edge onto ancestor '
+            'folds. Example: if A contains a1→a2 and B contains b1→b2, add '
+            'a2→b1, not A→B. It appears as A→B on the parent and as continued '
+            'arrows inside both folds. Repeat this rule recursively for nested '
+            'folds; use a fold id directly only when it is empty. When adding '
+            'a sequence, splice its entry and exit into the existing flow; '
+            'never leave a disconnected mini-chain unless explicitly '
+            'requested. Verify boundary edges with get-area because lint '
+            'cannot detect an isolated mini-chain. '
             'expectedRevision guards concurrency; replace=true replaces all. '
             'Default: summary. Use return=full only for the full document.',
         _boardSchema(
