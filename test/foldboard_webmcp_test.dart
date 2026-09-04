@@ -61,11 +61,11 @@ void main() {
     expect(changes['revision']['minimum'], 0);
     expect(
       changes['edges']['items']['properties']['from']['description'],
-      contains('Upstream'),
+      allOf(contains('Upstream'), contains('inner exit')),
     );
     expect(
       changes['edges']['items']['properties']['to']['description'],
-      contains('Downstream'),
+      allOf(contains('Downstream'), contains('inner entry')),
     );
     expect(properties('create-project')['clientRequestId']['maxLength'], 128);
     expect(properties('get-area')['limit']['default'], 20);
@@ -77,6 +77,15 @@ void main() {
     expect(
       tools['apply-changes']!.description,
       contains('Trace follows edges only'),
+    );
+    expect(
+      tools['apply-changes']!.description,
+      allOf(
+        contains('target fold enters its inner chain'),
+        contains('source fold continues from its inner exit'),
+        contains('Nested folds resolve recursively'),
+        contains('empty fold stays a step'),
+      ),
     );
     expect(
       tools['validate-architecture']!.description,

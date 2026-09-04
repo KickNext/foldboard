@@ -58,8 +58,18 @@ final class FoldboardWebMcpCatalog {
       }),
       'edges': rows({
         'id': string,
-        'from': {...string, 'description': 'Upstream source card id.'},
-        'to': {...string, 'description': 'Downstream next card id.'},
+        'from': {
+          ...string,
+          'description':
+              'Upstream source card or fold id. A source fold continues from '
+              'its inner exit.',
+        },
+        'to': {
+          ...string,
+          'description':
+              'Downstream next card or fold id. A target fold continues at '
+              'its inner entry.',
+        },
       }),
       'referencePositions': {
         'type': 'object',
@@ -253,9 +263,11 @@ final class FoldboardWebMcpCatalog {
       ),
       _tool(
         'apply-changes',
-        'Build directed flows with same-batch from→to edges. Trace follows '
-            'edges only. Connect every new card unless independent notes '
-            'were requested. Repair warnings, then validate. '
+        'Build directed flows with same-batch from→to edges. A target fold '
+            'enters its inner chain; a source fold continues from its inner '
+            'exit. Nested folds resolve recursively; an empty fold stays a '
+            'step. Trace follows edges only. Connect every new card unless '
+            'independent notes were requested. Repair warnings, then validate. '
             'expectedRevision guards concurrency; replace=true replaces all. '
             'Default: summary. Use return=full only for the full document.',
         _boardSchema(
