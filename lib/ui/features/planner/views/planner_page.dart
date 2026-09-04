@@ -5,7 +5,7 @@ import 'package:foldboard/l10n/l10n.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../webmcp/webmcp_bridge.dart';
+import '../../../../data/services/browser_platform.dart';
 
 import '../../../core/app_theme.dart';
 import '../../../core/board_snapshot.dart';
@@ -33,7 +33,7 @@ class PlannerPage extends StatefulWidget {
     this.onProjects,
     this.externalWarning,
     this.externalTicket,
-    this.pickJson = WebMcpBridge.pickJson,
+    this.pickJson = BrowserPlatform.pickJson,
   });
   final PlannerViewModel viewModel;
   final String? projectTitle;
@@ -246,7 +246,7 @@ class _PlannerPageState extends State<PlannerPage> {
       final layer = await boundary.toImage(pixelRatio: ratio);
       try {
         final bytes = await pngOnBackground(layer, background);
-        WebMcpBridge.downloadBytes('foldboard.png', 'image/png', bytes);
+        BrowserPlatform.downloadBytes('foldboard.png', 'image/png', bytes);
       } finally {
         layer.dispose();
       }

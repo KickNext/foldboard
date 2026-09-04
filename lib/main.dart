@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'storage_keys.dart';
-import 'webmcp/webmcp_bridge.dart';
+import 'data/services/browser_platform.dart';
 
 import 'l10n/l10n.dart';
 
@@ -21,7 +21,7 @@ bool shouldOpenExample(Uri uri) => uri.queryParameters['demo'] == '1';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final writeAccess = await WebMcpBridge.writeReady;
+  final writeAccess = await BrowserPlatform.writeReady;
   final settings = SettingsViewModel(
     repository: SettingsRepository(
       store: BrowserBoardStore(key: StorageKeys.settings),

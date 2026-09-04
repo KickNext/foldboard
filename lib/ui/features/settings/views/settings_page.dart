@@ -4,7 +4,7 @@ import '../../../../app_info.dart';
 import '../../../../data/repositories/settings_repository.dart';
 import '../../../../domain/models/app_settings.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../webmcp/webmcp_bridge.dart';
+import '../../../../webmcp/foldboard_webmcp.dart';
 import '../../../core/app_theme.dart';
 import '../../../core/page_feedback.dart';
 import '../../../core/segmented_picker.dart';
@@ -33,7 +33,7 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key, required this.viewModel, this.status});
   final SettingsViewModel viewModel;
 
-  /// Injected in tests; the real bridge is only present on the web build.
+  /// Injected in tests; the real package support exists only on web.
   final McpStatus? status;
 
   Future<void> _reset(BuildContext context) async {
@@ -68,7 +68,7 @@ class SettingsPage extends StatelessWidget {
         SettingsFailure.write => context.l10n.settingsWriteFailed,
         null => WriteAccessScope.warningOf(context),
       };
-      final mcp = status ?? WebMcpBridge.status;
+      final mcp = status ?? FoldboardWebMcpStatus.current;
       return Scaffold(
         appBar: AppBar(
           title: Text(context.l10n.settings),

@@ -48,21 +48,14 @@ void main() {
           throwsA(isA<AncestorConnectionException>()),
         );
         for (final replace in [false, true]) {
-          final result = jsonDecode(
-            vm.handleToolCall(
-              jsonEncode({
-                'tool': 'apply-changes',
-                'args': {
-                  'replace': replace,
-                  'changes': replace
-                      ? imported
-                      : {
-                          'edges': [edge],
-                        },
-                },
-              }),
-            ),
-          );
+          final result = vm.handleTool('apply-changes', {
+            'replace': replace,
+            'changes': replace
+                ? imported
+                : {
+                    'edges': [edge],
+                  },
+          });
           expect(result['ok'], isFalse);
           expect(result['error'], contains('containing process'));
         }

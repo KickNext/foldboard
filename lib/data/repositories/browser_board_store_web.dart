@@ -1,6 +1,6 @@
 import 'package:web/web.dart' as web;
 
-import '../../webmcp/webmcp_bridge.dart';
+import '../services/browser_platform.dart';
 import 'board_store.dart';
 
 class BrowserBoardStore implements BoardStore, WriteGuardedStore {
@@ -16,6 +16,6 @@ class BrowserBoardStore implements BoardStore, WriteGuardedStore {
 
   @override
   void checkWrite() {
-    if (!WebMcpBridge.hasWriteLock) throw const StorageConflict();
+    if (!BrowserPlatform.hasWriteLock) throw const StorageConflict();
   }
 }

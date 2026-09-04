@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../data/repositories/projects_repository.dart';
 import '../../../../domain/models/project.dart';
 import '../../../../l10n/l10n.dart';
+import '../../../../webmcp/foldboard_webmcp.dart';
 import '../../../core/app_theme.dart';
 import '../../../core/page_feedback.dart';
 import '../../../core/write_access_scope.dart';
@@ -103,7 +104,7 @@ class ProjectsPage extends StatelessWidget {
           starterSummary.blocks == 0 &&
           starterSummary.processes == 0 &&
           starterSummary.arrows == 0;
-      return planner != null
+      final page = planner != null
           ? PlannerPage(
               key: ValueKey(viewModel.activeProject!.id),
               viewModel: planner,
@@ -267,6 +268,12 @@ class ProjectsPage extends StatelessWidget {
                 ),
               ),
             );
+      return FoldboardWebMcpScopes(
+        catalog: viewModel.webMcp,
+        boardEnabled: planner != null,
+        requestsEnabled: planner != null && !planner.requests.loadFailed,
+        child: page,
+      );
     },
   );
 }

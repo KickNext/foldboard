@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:foldboard/data/repositories/board_requests_repository.dart';
 import 'package:foldboard/domain/models/project.dart';
 import 'package:foldboard/main.dart';
@@ -38,26 +36,14 @@ void main() {
       );
       final before = projects.planner;
       final count = projects.projects.length;
-      final result = jsonDecode(
-        projects.handleToolCall(
-          jsonEncode({
-            'tool': 'create-project',
-            'args': {'name': 'Must not create'},
-          }),
-        ),
-      ) as Map;
+      final result = projects.handleTool('create-project', {
+        'name': 'Must not create',
+      });
       expect(result['code'], 'unsaved-draft');
       expect(projects.projects.length, count);
       expect(projects.planner, same(before));
       final other = projects.repository.create('Other');
-      final switched = jsonDecode(
-        projects.handleToolCall(
-          jsonEncode({
-            'tool': 'open-project',
-            'args': {'id': other.id},
-          }),
-        ),
-      ) as Map;
+      final switched = projects.handleTool('open-project', {'id': other.id});
       expect(switched['code'], 'unsaved-draft');
       expect(projects.planner, same(before));
 

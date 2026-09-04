@@ -212,14 +212,11 @@ void main() {
       repo.addEdge(
         const ArchitectureEdge(id: 'process-edge', from: 'inner', to: 'human'),
       );
-      final result = jsonDecode(
-        vm.handleToolCall(
-          jsonEncode({
-            'tool': 'get-area',
-            'args': {'id': 'inner', 'return': 'full', 'includeView': true},
-          }),
-        ),
-      ) as Map;
+      final result = vm.handleTool('get-area', {
+        'id': 'inner',
+        'return': 'full',
+        'includeView': true,
+      });
       expect(result['ok'], isTrue);
       final imported = ArchitectureRepository()
         ..replace(Map<String, dynamic>.from(result['area'] as Map));

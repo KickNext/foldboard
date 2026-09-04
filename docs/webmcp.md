@@ -4,11 +4,19 @@ Foldboard exposes one plan to a person and an AI agent while keeping each task
 inside a bounded context. Agents inspect the outline, read only the required
 area and apply revision-checked changes without taking over the person's view.
 
-Foldboard registers 18 tools through
-`document.modelContext.registerTool`, using the
+Foldboard defines 18 tools in Dart and registers them through
+[`flutter_webmcp`](https://pub.dev/packages/flutter_webmcp), using the
 [WebMCP draft API](https://webmachinelearning.github.io/webmcp/). Registration
-is retried when the API appears late or the page regains focus. Registered tools
-are not duplicated. The interface works without a WebMCP client.
+and unregistration follow the mounted Flutter feature lifecycle. The interface
+works without a WebMCP client.
+
+Web Locks, JSON file selection, downloads and page lifecycle flushing also
+live in Dart through `package:web`. Foldboard does not ship a handwritten
+JavaScript bridge.
+
+The project tools are always exposed. Board tools are exposed only while a
+project is open. Request tools are exposed only while the open project's
+request store is readable. Closing a project removes those registrations.
 
 ## Collaboration rules
 
@@ -235,6 +243,7 @@ when available. Main codes:
 - `project-conflict`
 - `no-project`
 - `internal-error`
+- `cancelled`
 
 Never repeat a conflicting write blindly. Read the latest changes or request
 first.
@@ -249,6 +258,5 @@ person may undo the complete batch until another change follows it.
 ## Verification
 
 ```bash
-node --test test/webmcp_registration_test.cjs
-flutter test test/agent_protocol_test.dart test/token_budget_test.dart
+flutter test test/foldboard_webmcp_test.dart test/agent_protocol_test.dart test/token_budget_test.dart
 ```

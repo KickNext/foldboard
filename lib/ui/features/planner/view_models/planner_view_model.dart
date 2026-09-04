@@ -17,7 +17,7 @@ import '../../../../domain/models/agent_protocol.dart';
 import '../../../../data/repositories/board_store.dart';
 import '../../../../data/repositories/board_requests_repository.dart';
 import '../../../../domain/models/board_request.dart';
-import '../../../../webmcp/webmcp_bridge.dart';
+import '../../../../data/services/browser_platform.dart';
 
 import 'level_graph.dart';
 import 'board_search_result.dart';
@@ -93,9 +93,6 @@ class PlannerViewModel extends ChangeNotifier {
   }) : requests = requests ?? BoardRequestsRepository() {
     repository.addListener(_repositoryChanged);
     this.requests.addListener(notifyListeners);
-    if (registerBridge) {
-      WebMcpBridge.initialize(handleToolCall, repository.flush);
-    }
   }
   final ArchitectureRepository repository;
   final BoardRequestsRepository requests;
@@ -1523,7 +1520,7 @@ class PlannerViewModel extends ChangeNotifier {
 
   String get prettyJson =>
       const JsonEncoder.withIndent('  ').convert(snapshot());
-  void exportJson() => WebMcpBridge.download('foldboard.json', prettyJson);
+  void exportJson() => BrowserPlatform.download('foldboard.json', prettyJson);
 
   String markdown({
     String? title,
@@ -1550,7 +1547,7 @@ class PlannerViewModel extends ChangeNotifier {
     );
   }
 
-  void exportMarkdown({String? title}) => WebMcpBridge.download(
+  void exportMarkdown({String? title}) => BrowserPlatform.download(
     'foldboard.md',
     markdown(title: title),
     type: 'text/markdown',
@@ -1576,7 +1573,7 @@ class PlannerViewModel extends ChangeNotifier {
     );
   }
 
-  void exportMermaid({String? title}) => WebMcpBridge.download(
+  void exportMermaid({String? title}) => BrowserPlatform.download(
     'foldboard.mmd',
     mermaid(title: title),
     type: 'text/vnd.mermaid',
@@ -1652,11 +1649,9 @@ class PlannerViewModel extends ChangeNotifier {
     };
   }
 
-  String handleToolCall(String raw) {
+  Map<String, dynamic> handleTool(String tool, Map<String, dynamic> arguments) {
     try {
-      final request = jsonDecode(raw) as Map<String, dynamic>;
-      final args = Map<String, dynamic>.from(request['args'] as Map? ?? {});
-      final tool = request['tool'];
+      final args = Map<String, dynamic>.from(arguments);
       final result = <String, dynamic>{'ok': true};
       if (args.containsKey('validate') && args['validate'] is! bool) {
         throw const AgentException(
@@ -2073,9 +2068,9 @@ class PlannerViewModel extends ChangeNotifier {
       result['revision'] = repository.revision;
       result['historyId'] = repository.historyId;
       result.putIfAbsent('context', () => userContext());
-      return jsonEncode(result);
+      return result;
     } catch (e) {
-      return jsonEncode({
+      return {
         ...agentFailure(
           e is AncestorConnectionException
               ? AgentException('ancestor-arrow', e.message)
@@ -2089,7 +2084,7 @@ class PlannerViewModel extends ChangeNotifier {
         ),
         if (e is AgentException && e.code == 'request-conflict')
           'requestsRevision': requests.revision,
-      });
+      };
     }
   }
 

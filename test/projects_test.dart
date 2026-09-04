@@ -171,9 +171,7 @@ void main() {
       Map<String, dynamic> call(
         String tool, [
         Map<String, dynamic> args = const {},
-      ]) => jsonDecode(
-        vm.handleToolCall(jsonEncode({'tool': tool, 'args': args})),
-      );
+      ]) => vm.handleTool(tool, args);
       expect(call('get-architecture')['ok'], isFalse);
       expect(call('list-projects')['projects'], hasLength(1));
       expect(call('open-project', {'id': Project.defaultId})['ok'], isTrue);
@@ -207,9 +205,7 @@ void main() {
     Map<String, dynamic> invoke(
       String tool, [
       Map<String, dynamic> args = const {},
-    ]) =>
-        jsonDecode(vm.handleToolCall(jsonEncode({'tool': tool, 'args': args})))
-            as Map<String, dynamic>;
+    ]) => vm.handleTool(tool, args);
 
     final args = {
       'name': 'Reliable agent project',

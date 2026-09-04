@@ -169,6 +169,5 @@ production domain.
 ```bash
 dart analyze
 flutter test
-node --test test/webmcp_registration_test.cjs
 flutter build web --release --no-web-resources-cdn
 ```

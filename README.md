@@ -139,7 +139,6 @@ The full tool catalogue, error codes and paging rules are in
 ```bash
 dart analyze
 flutter test
-node --test test/webmcp_registration_test.cjs
 flutter build web --release --no-web-resources-cdn
 ```
 
@@ -158,8 +157,9 @@ stops working offline, behind a strict CSP, or on a restricted network.
   Only 400/600/700 are shipped; asking for another weight synthesises it.
 - `AppInfo.appVersion` mirrors `pubspec.yaml`; `test/app_info_test.dart` fails
   if they drift.
-- Storage keys, the Web Lock name and the `window.foldboard` namespace are
-  defined once in `lib/storage_keys.dart`. There are no format versions
+- Storage keys and the Web Lock name are defined once in
+  `lib/storage_keys.dart`. Browser APIs live in a conditional Dart service;
+  the page has no custom JavaScript bridge. There are no format versions
   or migrations: the app reads one document shape and one key prefix.
 
 ## Before you deploy

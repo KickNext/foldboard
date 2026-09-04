@@ -7,6 +7,6 @@ abstract final class AppInfo {
   static const name = 'Foldboard';
   static const appVersion = '1.0.0';
 
-  /// The WebMCP draft the bridge in `web/webmcp.js` implements.
+  /// The WebMCP draft implemented by the Flutter integration.
   static const webMcpSpecUrl = 'https://webmachinelearning.github.io/webmcp/';
 }

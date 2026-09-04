@@ -8,7 +8,8 @@ import '../../../../domain/models/project.dart';
 import '../../../../domain/models/agent_protocol.dart';
 import '../../../../domain/examples/example_project.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../webmcp/webmcp_bridge.dart';
+import '../../../../webmcp/foldboard_webmcp.dart';
+import '../../../../data/services/browser_platform.dart';
 import '../../planner/view_models/planner_view_model.dart';
 
 class ProjectsViewModel extends ChangeNotifier {
@@ -23,9 +24,11 @@ class ProjectsViewModel extends ChangeNotifier {
       );
       _planner!.agentCanWrite = () => agentCanWrite();
     }
-    WebMcpBridge.initialize(handleToolCall, flush);
+    webMcp = FoldboardWebMcpCatalog(invoke: invokeTool);
+    BrowserPlatform.setFlush(flush);
   }
   final ProjectsRepository repository;
+  late final FoldboardWebMcpCatalog webMcp;
   bool Function() agentCanWrite = () => true;
   PlannerViewModel? _planner;
   String? _plannerId;
@@ -155,17 +158,16 @@ class ProjectsViewModel extends ChangeNotifier {
     _disposePlanner();
   });
 
-  String handleToolCall(String raw) {
+  Map<String, dynamic> handleTool(String tool, Map<String, dynamic> arguments) {
     try {
-      final request = jsonDecode(raw) as Map<String, dynamic>;
-      final args = Map<String, dynamic>.from(request['args'] as Map? ?? {});
-      switch (request['tool']) {
+      final args = Map<String, dynamic>.from(arguments);
+      switch (tool) {
         case 'list-projects':
-          return jsonEncode({
+          return {
             'ok': true,
             'projects': projects.map((p) => p.toJson()).toList(),
             'activeProjectId': activeProject?.id,
-          });
+          };
         case 'create-project':
           if (!agentCanWrite() || !repository.canEdit) {
             throw const AgentException(
@@ -207,26 +209,26 @@ class ProjectsViewModel extends ChangeNotifier {
               );
             }
             if (!open(existing.id)) throw StateError(warning!);
-            return jsonEncode({
+            return {
               'ok': true,
               'project': activeProject!.toJson(),
               'replayed': true,
-            });
+            };
           }
           _checkDraft();
           if (!create(name, id: projectId)) throw StateError(warning!);
-          return jsonEncode({
+          return {
             'ok': true,
             'project': activeProject!.toJson(),
             'replayed': false,
-          });
+          };
         case 'open-project':
           if (!projects.any((p) => p.id == args['id'])) {
             throw const AgentException('unknown-id', 'Project not found.');
           }
           if (args['id'] != activeProject?.id) _checkDraft();
           if (!open(args['id'] as String)) throw StateError(warning!);
-          return jsonEncode({'ok': true, 'project': activeProject!.toJson()});
+          return {'ok': true, 'project': activeProject!.toJson()};
         default:
           if (_planner == null) {
             throw const AgentException(
@@ -243,21 +245,26 @@ class ProjectsViewModel extends ChangeNotifier {
               'Active project changed. Read the project again.',
             );
           }
-          final result =
-              jsonDecode(_planner!.handleToolCall(raw)) as Map<String, dynamic>;
+          final result = _planner!.handleTool(tool, args);
           result['project'] = activeProject!.toJson();
-          return jsonEncode(result);
+          return result;
       }
     } catch (e) {
-      return jsonEncode({
+      return {
         ...agentFailure(e, _planner?.repository.revision),
         'projectId': activeProject?.id,
-      });
+      };
     }
   }
 
+  Map<String, dynamic> invokeTool(
+    String name,
+    Map<String, dynamic> arguments,
+  ) => handleTool(name, arguments);
+
   @override
   void dispose() {
+    BrowserPlatform.setFlush(null);
     repository.removeListener(notifyListeners);
     _disposePlanner();
     super.dispose();

@@ -13,7 +13,6 @@ void main() {
     expect(StorageKeys.projectBoard('abc'), '$p.project.abc.board');
     expect(StorageKeys.projectRequests('abc'), '$p.project.abc.requests');
     expect(StorageKeys.editorLock, '$p-editor');
-    expect(StorageKeys.jsNamespace, p);
   });
 
   test('the first project is stored like any other', () {
@@ -25,12 +24,13 @@ void main() {
     expect(other.requestsKey, StorageKeys.projectRequests('p1'));
   });
 
-  test('webmcp.js, the bridge and the manifest use the Dart names', () {
-    final js = File('web/webmcp.js').readAsStringSync();
-    expect(js, contains('window.${StorageKeys.jsNamespace} = '));
-    expect(js, contains("'${StorageKeys.editorLock}'"));
-    final bridge = File('lib/webmcp/webmcp_bridge_web.dart').readAsStringSync();
-    expect(bridge, contains("@JS('${StorageKeys.jsNamespace}')"));
+  test('Dart browser service, tool catalogue and manifest share names', () {
+    final browserService = File('lib/data/services/browser_platform_web.dart')
+        .readAsStringSync();
+    expect(browserService, contains('StorageKeys.editorLock'));
+    final catalog = File('lib/webmcp/foldboard_webmcp.dart').readAsStringSync();
+    expect(catalog, contains("'list-projects'"));
+    expect(catalog, contains("'apply-changes'"));
     final manifest =
         jsonDecode(File('web/manifest.json').readAsStringSync()) as Map;
     expect(manifest['id'], StorageKeys.prefix);
@@ -45,7 +45,6 @@ void main() {
           .whereType<File>()
           .where((f) => f.path.endsWith('.dart'))
           .where((f) => !f.path.contains('generated')),
-      File('web/webmcp.js'),
       File('web/index.html'),
       File('web/manifest.json'),
       File('pubspec.yaml'),

@@ -11,9 +11,7 @@ Map<String, dynamic> call(
   PlannerViewModel vm,
   String name, [
   Map<String, dynamic> args = const {},
-]) =>
-    jsonDecode(vm.handleToolCall(jsonEncode({'tool': name, 'args': args})))
-        as Map<String, dynamic>;
+]) => vm.handleTool(name, args);
 
 class MemoryStore implements BoardStore {
   String? value;

@@ -19,9 +19,7 @@ Map<String, dynamic> call(
   PlannerViewModel vm,
   String name, [
   Map<String, dynamic> args = const {},
-]) =>
-    jsonDecode(vm.handleToolCall(jsonEncode({'tool': name, 'args': args})))
-        as Map<String, dynamic>;
+]) => vm.handleTool(name, args);
 
 void main() {
   late ArchitectureRepository repo;
@@ -465,9 +463,8 @@ void main() {
       addTearDown(restored.dispose);
       expect(restored.value.agentReadOnly, isTrue);
       projects.agentCanWrite = () => !restored.value.agentReadOnly;
-      Map invoke(String name, Map args) => jsonDecode(
-        projects.handleToolCall(jsonEncode({'tool': name, 'args': args})),
-      ) as Map;
+      Map invoke(String name, Map args) =>
+          projects.handleTool(name, Map<String, dynamic>.from(args));
       expect(
         invoke('create-project', {'name': 'Not allowed'})['code'],
         'read-only',
